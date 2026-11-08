@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diseñar para Todos | Guía de usabilidad y accesibilidad web</title>
+<meta name="description" content="Guía informativa sobre usabilidad, accesibilidad, ingeniería de usabilidad, métodos de evaluación y diseño web centrado en el usuario. UMB.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%231e4fd8'/%3E%3Ccircle cx='24' cy='14' r='4' fill='white'/%3E%3Cpath d='M13 20l11 2 11-2M24 22v8l-6 9M24 30l6 9' stroke='white' stroke-width='3.2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#f6f7fb; --surface:#ffffff; --surface-2:#eef1f8;
+    --text:#172033; --muted:#4a5568; --border:#d6dbe7;
+    --accent:#1e4fd8; --accent-strong:#163da8; --accent-soft:#e3eafe;
+    --ok:#0f7a4f; --warn:#9a5b00;
+    --focus:#f5a400;
+    --radius:14px; --shadow:0 2px 10px rgba(20,30,60,.07);
+    --maxw:72ch;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1420; --surface:#171e2e; --surface-2:#1f2840;
+    --text:#e8ecf5; --muted:#b4bdd0; --border:#2f3a55;
+    --accent:#8fb0ff; --accent-strong:#b5cbff; --accent-soft:#22305a;
+    --ok:#5fd3a0; --warn:#f2c066;
+    --shadow:0 2px 10px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1420; --surface:#171e2e; --surface-2:#1f2840;
+      --text:#e8ecf5; --muted:#b4bdd0; --border:#2f3a55;
+      --accent:#8fb0ff; --accent-strong:#b5cbff; --accent-soft:#22305a;
+      --ok:#5fd3a0; --warn:#f2c066;
+      --shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:80px}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important; animation:none!important} }
+  body{margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:1.0625rem; line-height:1.7}
+  a{color:var(--accent)}
+  a:hover{color:var(--accent-strong)}
+  :focus-visible{outline:3px solid var(--focus); outline-offset:3px; border-radius:4px}
+  .skip{position:absolute; left:-999px; top:8px; background:var(--accent); color:#fff; padding:.6rem 1rem; border-radius:8px; z-index:100; font-weight:600}
+  .skip:focus{left:16px; color:#fff}
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+  /* Header */
+  header.top{position:sticky; top:0; z-index:50; background:var(--surface); border-bottom:1px solid var(--border); box-shadow:var(--shadow)}
+  .top-inner{max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:1rem; padding:.7rem 16px}
+  .brand{display:flex; align-items:center; gap:.6rem; text-decoration:none; color:var(--text); font-weight:800; font-size:1.15rem; margin-right:auto}
+  .brand svg{flex:none}
+  .brand small{display:block; font-weight:500; font-size:.75rem; color:var(--muted); line-height:1.2}
+  .tools{display:flex; gap:.4rem; align-items:center}
+  .btn{font:inherit; font-size:.9rem; cursor:pointer; border:1px solid var(--border); background:var(--surface-2); color:var(--text);
+    padding:.45rem .7rem; border-radius:10px; min-height:44px; min-width:44px; display:inline-flex; align-items:center; justify-content:center; gap:.35rem}
+  .btn:hover{border-color:var(--accent)}
+  .menu-btn{display:none}
+
+  /* Layout */
+  .layout{max-width:1200px; margin:0 auto; display:grid; grid-template-columns:260px 1fr; gap:2rem; padding:1.5rem 16px 3rem}
+  nav.toc{position:sticky; top:84px; align-self:start; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow)}
+  nav.toc h2{font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 .5rem}
+  nav.toc ol{list-style:none; margin:0; padding:0}
+  nav.toc a{display:flex; gap:.6rem; padding:.5rem .6rem; border-radius:8px; text-decoration:none; color:var(--text); font-size:.95rem; line-height:1.35}
+  nav.toc a .n{flex:none; width:1.6rem; height:1.6rem; border-radius:50%; background:var(--surface-2); display:grid; place-items:center; font-size:.8rem; font-weight:700}
+  nav.toc a:hover{background:var(--surface-2)}
+  nav.toc a[aria-current="true"]{background:var(--accent-soft); color:var(--accent-strong); font-weight:700}
+  nav.toc a[aria-current="true"] .n{background:var(--accent); color:#fff}
+
+  main{min-width:0}
+  .hero{background:linear-gradient(135deg,var(--accent) 0%, #6a3fd1 100%); color:#fff; border-radius:var(--radius); padding:2.5rem 2rem; margin-bottom:2rem}
+  .hero h1{font-size:clamp(2rem,5vw,3rem); line-height:1.1; margin:0 0 .5rem}
+  .hero p{max-width:60ch; margin:.4rem 0; font-size:1.1rem}
+  .hero .kicker{text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; font-weight:700; opacity:.9}
+  .chips{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem; padding:0; list-style:none}
+  .chips a{display:inline-block; background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.4); padding:.4rem .8rem; border-radius:999px; text-decoration:none; font-size:.9rem}
+  .chips a:hover{background:rgba(255,255,255,.28); color:#fff}
+
+  section.topic{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; margin-bottom:1.5rem; box-shadow:var(--shadow)}
+  section.topic > *{max-width:var(--maxw)}
+  section.topic .wide{max-width:none}
+  .eyebrow{display:inline-block; font-size:.8rem; font-weight:700; color:var(--accent-strong); background:var(--accent-soft); padding:.2rem .6rem; border-radius:999px; margin-bottom:.4rem}
+  h2.sec{font-size:clamp(1.5rem,3vw,1.9rem); line-height:1.2; margin:.2rem 0 1rem}
+  h3{font-size:1.2rem; margin:1.6rem 0 .5rem}
+  .lead{font-size:1.12rem; color:var(--muted)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1rem; margin:1rem 0}
+  .card{background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:1rem 1.1rem}
+  .card h4{margin:0 0 .3rem; font-size:1.02rem}
+  .card p{margin:0; font-size:.97rem; color:var(--muted)}
+  .note{border-left:5px solid var(--accent); background:var(--accent-soft); padding:1rem 1.2rem; border-radius:0 10px 10px 0; margin:1.2rem 0}
+  .note strong{color:var(--accent-strong)}
+  blockquote{margin:1.2rem 0; padding:1rem 1.2rem; border-left:5px solid #6a3fd1; background:var(--surface-2); border-radius:0 10px 10px 0; font-style:italic}
+  blockquote cite{display:block; font-style:normal; font-size:.9rem; color:var(--muted); margin-top:.4rem}
+
+  /* Lifecycle */
+  .phases{list-style:none; padding:0; margin:1.2rem 0; display:grid; gap:1rem; counter-reset:ph}
+  .phase{position:relative; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.2rem 1.1rem 4.2rem}
+  .phase::before{counter-increment:ph; content:counter(ph); position:absolute; left:1rem; top:1rem; width:2.4rem; height:2.4rem; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; font-weight:800}
+  .phase h4{margin:0 0 .3rem}
+  .phase ul{margin:.3rem 0 0; padding-left:1.1rem}
+  .cycle{display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; list-style:none; padding:0; margin:1rem 0}
+  .cycle li{background:var(--accent-soft); color:var(--accent-strong); font-weight:700; padding:.5rem .9rem; border-radius:999px}
+  .cycle li.arrow{background:none; color:var(--muted); padding:0}
+
+  /* Table */
+  .table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:12px; margin:1rem 0}
+  table{border-collapse:collapse; width:100%; min-width:620px; font-size:.95rem}
+  caption{text-align:left; padding:.8rem 1rem; font-weight:700; background:var(--surface-2)}
+  th,td{padding:.7rem 1rem; text-align:left; vertical-align:top; border-top:1px solid var(--border)}
+  thead th{background:var(--surface-2); font-size:.85rem; text-transform:uppercase; letter-spacing:.04em}
+  tbody tr:nth-child(even){background:color-mix(in srgb, var(--surface-2) 45%, transparent)}
+  .tag{display:inline-block; font-size:.78rem; font-weight:700; padding:.1rem .5rem; border-radius:999px}
+  .tag.ins{background:#fff1d6; color:#7a4600}
+  .tag.usr{background:#d7f5e8; color:#0b5c3b}
+  :root[data-theme="dark"] .tag.ins{background:#4a3410; color:#ffd88f}
+  :root[data-theme="dark"] .tag.usr{background:#123d2c; color:#9cf0c8}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .tag.ins{background:#4a3410; color:#ffd88f}
+    :root:not([data-theme="light"]) .tag.usr{background:#123d2c; color:#9cf0c8}
+  }
+
+  details{background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.2rem 1rem; margin:.6rem 0}
+  summary{cursor:pointer; font-weight:700; padding:.6rem 0; min-height:44px; display:flex; align-items:center}
+  details[open] summary{border-bottom:1px solid var(--border); margin-bottom:.5rem}
+
+  ol.refs{padding-left:0; list-style:none}
+  ol.refs li{padding-left:2rem; text-indent:-2rem; margin:0 0 .9rem}
+
+  .applied{list-style:none; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:.8rem}
+  .applied li{display:flex; gap:.6rem; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.8rem 1rem; font-size:.95rem}
+  .applied li span[aria-hidden]{color:var(--ok); font-weight:900}
+
+  /* Figuras e ilustraciones */
+  .fig{margin:1.5rem 0; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1rem .9rem; text-align:center; max-width:none!important}
+  .fig svg{width:100%; height:auto; max-height:320px; display:block; margin:0 auto}
+  .fig figcaption{font-size:.9rem; color:var(--muted); margin-top:.6rem}
+  .fig text, .hero-art text{font-family:inherit}
+  .s-bg{fill:var(--surface)} .s-soft{fill:var(--accent-soft)} .s-acc{fill:var(--accent)}
+  .s-txt{fill:var(--text)} .s-muted{fill:var(--muted)} .s-ok{fill:var(--ok)}
+  .s-stroke{stroke:var(--border)} .s-stroke-acc{stroke:var(--accent)} .s-stroke-txt{stroke:var(--text)}
+  .hero-grid{display:grid; grid-template-columns:1.35fr 1fr; gap:1.5rem; align-items:center}
+  .hero-art svg{width:100%; height:auto; max-width:360px; display:block; margin:0 auto; filter:drop-shadow(0 10px 20px rgba(0,0,0,.2))}
+  .logo-lg{display:block; margin-bottom:.8rem}
+  footer .flogo{display:inline-block; vertical-align:middle; margin-bottom:.4rem}
+
+  footer{border-top:1px solid var(--border); background:var(--surface); color:var(--muted); text-align:center; padding:2rem 16px; font-size:.92rem}
+  footer strong{color:var(--text)}
+
+  .to-top{position:fixed; right:16px; bottom:16px; z-index:40; border-radius:50%; width:52px; height:52px; background:var(--accent); color:#fff; border:none; box-shadow:var(--shadow); cursor:pointer; font-size:1.4rem; opacity:0; pointer-events:none; transition:opacity .2s}
+  .to-top.show{opacity:1; pointer-events:auto}
+
+  @media (max-width: 900px){
+    .layout{grid-template-columns:1fr; gap:1rem}
+    .menu-btn{display:inline-flex}
+    nav.toc{position:static; display:none}
+    nav.toc.open{display:block}
+    section.topic{padding:1.4rem 1.1rem}
+    .hero{padding:1.8rem 1.3rem}
+    .tools .label{display:none}
+    .hero-grid{grid-template-columns:1fr}
+    .hero-art{order:-1}
+    .hero-art svg{max-width:260px}
+    .brand{font-size:1rem; white-space:nowrap}
+    .brand small{display:none}
+    .brand svg{width:34px; height:34px}
+    .top-inner{gap:.5rem; padding:.5rem 12px}
+    .tools{gap:.3rem}
+    .tools .btn{padding:.35rem .5rem; min-width:40px}
+    .logo-lg{display:none}
+  }
+  @media (max-width: 420px){
+    .menu-btn .lbl{display:none}
+  }
+  @media print{
+    header.top, nav.toc, .to-top, .tools{display:none!important}
+    .layout{display:block}
+    section.topic{box-shadow:none; break-inside:avoid-page}
+    .hero{background:none; color:#000; border:1px solid #999}
+    .hero .chips{display:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido principal</a>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="#inicio" aria-label="Diseñar para Todos, ir al inicio">
+      <svg width="42" height="42" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e4fd8"/><stop offset="1" stop-color="#6a3fd1"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#lg1)"/><circle cx="24" cy="24" r="16" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/><circle cx="24" cy="14.5" r="3.4" fill="#fff"/><path d="M13.5 20.5l10.5 2 10.5-2M24 22.5v7l-5.5 8.5M24 29.5l5.5 8.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="38" cy="38" r="7.5" fill="#f5a400" stroke="#fff" stroke-width="2"/><path d="M34.6 38l2.4 2.4 4.2-4.4" stroke="#172033" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Diseñar para Todos<small>Usabilidad y accesibilidad web</small></span>
+    </a>
+    <div class="tools" role="group" aria-label="Opciones de visualización">
+      <button class="btn" id="fontDown" type="button" aria-label="Reducir tamaño del texto">A−</button>
+      <button class="btn" id="fontUp" type="button" aria-label="Aumentar tamaño del texto">A+</button>
+      <button class="btn" id="themeBtn" type="button" aria-pressed="false" aria-label="Activar modo oscuro"><span aria-hidden="true">◐</span><span class="label">Tema</span></button>
+      <button class="btn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="toc"><span aria-hidden="true">☰</span><span class="lbl" aria-hidden="true">Índice</span><span class="sr-only">Abrir índice</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="Índice de contenidos">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#inicio"><span class="n" aria-hidden="true">★</span>Inicio</a></li>
+      <li><a href="#nociones"><span class="n" aria-hidden="true">1</span>Usabilidad: nociones básicas</a></li>
+      <li><a href="#accesibilidad"><span class="n" aria-hidden="true">2</span>Usabilidad y accesibilidad</a></li>
+      <li><a href="#ingenieria"><span class="n" aria-hidden="true">3</span>Ingeniería de usabilidad</a></li>
+      <li><a href="#ciclo"><span class="n" aria-hidden="true">4</span>Ciclo de vida</a></li>
+      <li><a href="#metodos"><span class="n" aria-hidden="true">5</span>Métodos de evaluación</a></li>
+      <li><a href="#dcu"><span class="n" aria-hidden="true">6</span>Diseño centrado en el usuario</a></li>
+      <li><a href="#referencias"><span class="n" aria-hidden="true">7</span>Referencias</a></li>
+      <li><a href="#este-sitio"><span class="n" aria-hidden="true">✓</span>Usabilidad en este sitio</a></li>
+    </ol>
+  </nav>
+
+  <main id="contenido" tabindex="-1">
+
+    <!-- INICIO -->
+    <section id="inicio" class="hero" aria-labelledby="t-inicio">
+     <div class="hero-grid">
+      <div>
+      <svg class="logo-lg" width="64" height="64" viewBox="0 0 48 48" role="img" aria-label="Logo de Diseñar para Todos: figura humana con los brazos abiertos y una marca de verificación"><rect width="48" height="48" rx="13" fill="#fff" opacity=".18"/><circle cx="24" cy="24" r="16" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/><circle cx="24" cy="14.5" r="3.4" fill="#fff"/><path d="M13.5 20.5l10.5 2 10.5-2M24 22.5v7l-5.5 8.5M24 29.5l5.5 8.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="38" cy="38" r="7.5" fill="#f5a400" stroke="#fff" stroke-width="2"/><path d="M34.6 38l2.4 2.4 4.2-4.4" stroke="#172033" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <p class="kicker">Guía informativa · Universidad Manuela Beltrán</p>
+      <h1 id="t-inicio">Diseñar para Todos</h1>
+      <p>Una guía clara sobre cómo construir sitios web que cualquier persona pueda usar con facilidad, eficiencia y satisfacción.</p>
+      <p>Aquí encontrarás los fundamentos de la usabilidad y la accesibilidad, la ingeniería de usabilidad, su ciclo de vida, los métodos para evaluarla y el diseño web centrado en el usuario.</p>
+      <ul class="chips" aria-label="Accesos rápidos">
+        <li><a href="#nociones">Nociones básicas</a></li>
+        <li><a href="#accesibilidad">Accesibilidad</a></li>
+        <li><a href="#ciclo">Ciclo de vida</a></li>
+        <li><a href="#metodos">Evaluación</a></li>
+        <li><a href="#dcu">Diseño centrado en el usuario</a></li>
+      </ul>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 340 260" role="img" aria-labelledby="hero-t">
+          <title id="hero-t">Ilustración de una página web ordenada y clara, con un símbolo de accesibilidad universal y un cursor, que representa una web usable para todas las personas</title>
+          <rect x="20" y="20" width="300" height="205" rx="14" fill="#fff"/>
+          <rect x="20" y="20" width="300" height="32" rx="14" fill="#e3eafe"/>
+          <rect x="20" y="38" width="300" height="14" fill="#e3eafe"/>
+          <circle cx="40" cy="36" r="5" fill="#ff6b6b"/><circle cx="56" cy="36" r="5" fill="#f5a400"/><circle cx="72" cy="36" r="5" fill="#2bb673"/>
+          <rect x="92" y="30" width="130" height="12" rx="6" fill="#fff"/>
+          <rect x="40" y="70" width="150" height="13" rx="6.5" fill="#1e4fd8"/>
+          <rect x="40" y="91" width="115" height="8" rx="4" fill="#c7d2fe"/>
+          <rect x="40" y="115" width="78" height="62" rx="9" fill="#eef1f8"/>
+          <rect x="50" y="127" width="30" height="6" rx="3" fill="#6a3fd1"/><rect x="50" y="140" width="56" height="5" rx="2.5" fill="#c7d2fe"/><rect x="50" y="150" width="46" height="5" rx="2.5" fill="#c7d2fe"/>
+          <rect x="128" y="115" width="78" height="62" rx="9" fill="#eef1f8"/>
+          <rect x="138" y="127" width="30" height="6" rx="3" fill="#1e4fd8"/><rect x="138" y="140" width="56" height="5" rx="2.5" fill="#c7d2fe"/><rect x="138" y="150" width="46" height="5" rx="2.5" fill="#c7d2fe"/>
+          <rect x="40" y="190" width="70" height="20" rx="10" fill="#1e4fd8"/>
+          <circle cx="262" cy="140" r="50" fill="#6a3fd1" stroke="#fff" stroke-width="5"/>
+          <circle cx="262" cy="116" r="7.5" fill="#fff"/>
+          <path d="M236 129l26 5 26-5M262 134v15l-12 20M262 149l12 20" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M96 196l0 30 8-8 6 13 6-3-6-12 11 0z" fill="#172033" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="306" cy="34" r="20" fill="#f5a400" stroke="#fff" stroke-width="4"/>
+          <path d="M297 34l6 6 11-12" stroke="#172033" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+     </div>
+    </section>
+
+    <!-- 1 -->
+    <section id="nociones" class="topic" aria-labelledby="t1">
+      <span class="eyebrow">Tema 1</span>
+      <h2 id="t1" class="sec">Usabilidad: nociones básicas para los profesionales de la información</h2>
+      <p class="lead">La usabilidad es la medida en que un producto puede ser usado por determinados usuarios para lograr objetivos concretos con eficacia, eficiencia y satisfacción, en un contexto de uso específico.</p>
+      <p>Esta es, en esencia, la definición de la norma <strong>ISO 9241-11</strong>. Destaca que la usabilidad no es una propiedad aislada del sitio. Depende de <em>quién</em> lo usa, <em>para qué</em> y <em>en qué situación</em>.</p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 600 210" role="img" aria-labelledby="f1t">
+          <title id="f1t">Las tres dimensiones de la usabilidad: una diana para la eficacia, un reloj para la eficiencia y una cara sonriente para la satisfacción</title>
+          <g transform="translate(100,88)">
+            <circle r="60" class="s-soft"/>
+            <circle r="36" class="s-bg s-stroke-acc" stroke-width="6"/>
+            <circle r="21" fill="none" class="s-stroke-acc" stroke-width="6"/>
+            <circle r="7" class="s-acc"/>
+            <path d="M44-44L5-5" class="s-stroke-txt" stroke-width="4" stroke-linecap="round"/>
+            <path d="M44-44l-12 2M44-44l-2 12" class="s-stroke-txt" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <text x="100" y="180" text-anchor="middle" class="s-txt" font-size="20" font-weight="700">Eficacia</text>
+          <text x="100" y="202" text-anchor="middle" class="s-muted" font-size="14">¿Logró su objetivo?</text>
+          <text x="200" y="96" text-anchor="middle" class="s-muted" font-size="34" font-weight="700">+</text>
+          <g transform="translate(300,88)">
+            <circle r="60" class="s-soft"/>
+            <circle r="36" class="s-bg s-stroke-acc" stroke-width="6"/>
+            <path d="M0 0V-22M0 0l16 9" class="s-stroke-txt" stroke-width="4.5" stroke-linecap="round"/>
+            <circle r="4" class="s-txt"/>
+          </g>
+          <text x="300" y="180" text-anchor="middle" class="s-txt" font-size="20" font-weight="700">Eficiencia</text>
+          <text x="300" y="202" text-anchor="middle" class="s-muted" font-size="14">¿Con cuánto esfuerzo?</text>
+          <text x="400" y="96" text-anchor="middle" class="s-muted" font-size="34" font-weight="700">+</text>
+          <g transform="translate(500,88)">
+            <circle r="60" class="s-soft"/>
+            <circle r="36" fill="#f5a400"/>
+            <circle cx="-12" cy="-8" r="4.5" fill="#172033"/><circle cx="12" cy="-8" r="4.5" fill="#172033"/>
+            <path d="M-16 8Q0 26 16 8" stroke="#172033" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          </g>
+          <text x="500" y="180" text-anchor="middle" class="s-txt" font-size="20" font-weight="700">Satisfacción</text>
+          <text x="500" y="202" text-anchor="middle" class="s-muted" font-size="14">¿Fue agradable?</text>
+        </svg>
+        <figcaption>Figura 1. Las tres dimensiones de la usabilidad según la norma ISO 9241-11.</figcaption>
+      </figure>
+
+      <h3>Las tres dimensiones de la norma ISO 9241-11</h3>
+      <div class="grid">
+        <div class="card"><h4>Eficacia</h4><p>Precisión y completitud con la que el usuario alcanza su objetivo. Por ejemplo, ¿encontró el libro que buscaba en el catálogo?</p></div>
+        <div class="card"><h4>Eficiencia</h4><p>Recursos invertidos para lograrlo: tiempo, clics y esfuerzo mental.</p></div>
+        <div class="card"><h4>Satisfacción</h4><p>Comodidad y actitud positiva del usuario durante y después de la interacción.</p></div>
+      </div>
+
+      <h3>Los cinco atributos de Jakob Nielsen</h3>
+      <p>Nielsen (1993) propuso cinco componentes que hacen medible la usabilidad:</p>
+      <ul>
+        <li><strong>Facilidad de aprendizaje:</strong> qué tan rápido un usuario nuevo realiza tareas básicas.</li>
+        <li><strong>Eficiencia de uso:</strong> qué tan rápido trabaja un usuario que ya conoce el sistema.</li>
+        <li><strong>Memorabilidad:</strong> qué tan fácil es volver a usarlo después de un tiempo sin hacerlo.</li>
+        <li><strong>Errores:</strong> cuántos se cometen, qué tan graves son y qué tan fácil es recuperarse.</li>
+        <li><strong>Satisfacción:</strong> qué tan agradable resulta usarlo.</li>
+      </ul>
+
+      <h3>¿Por qué importa a los profesionales de la información?</h3>
+      <p>Bibliotecólogos, archivistas y gestores documentales diseñan y administran puntos de acceso al conocimiento: catálogos en línea (OPAC), repositorios institucionales, bibliotecas digitales, bases de datos y portales. Si estos sistemas no son usables, la información existe pero <strong>no se encuentra</strong>, y el servicio fracasa.</p>
+      <div class="grid">
+        <div class="card"><h4>Recuperación de información</h4><p>Buscadores claros, filtros comprensibles y resultados bien ordenados.</p></div>
+        <div class="card"><h4>Arquitectura de la información</h4><p>Organización, etiquetado y navegación coherentes con el modelo mental del usuario.</p></div>
+        <div class="card"><h4>Alfabetización informacional</h4><p>Interfaces que enseñan por sí solas y reducen la dependencia de la ayuda presencial.</p></div>
+        <div class="card"><h4>Evaluación de servicios</h4><p>Datos objetivos para justificar mejoras e inversiones en plataformas.</p></div>
+      </div>
+
+      <h3>Las 10 heurísticas de Nielsen</h3>
+      <p>Son principios generales para diseñar y revisar interfaces:</p>
+      <details>
+        <summary>Ver las 10 heurísticas</summary>
+        <ol>
+          <li><strong>Visibilidad del estado del sistema:</strong> informar siempre qué está pasando.</li>
+          <li><strong>Relación entre el sistema y el mundo real:</strong> usar el lenguaje del usuario, no jerga técnica.</li>
+          <li><strong>Control y libertad del usuario:</strong> permitir deshacer, cancelar y salir fácilmente.</li>
+          <li><strong>Consistencia y estándares:</strong> lo mismo se nombra y se comporta igual en todo el sitio.</li>
+          <li><strong>Prevención de errores:</strong> evitar que el problema ocurra antes que corregirlo.</li>
+          <li><strong>Reconocer antes que recordar:</strong> opciones visibles en lugar de exigir memoria.</li>
+          <li><strong>Flexibilidad y eficiencia de uso:</strong> atajos para expertos sin confundir a los novatos.</li>
+          <li><strong>Diseño estético y minimalista:</strong> solo la información relevante.</li>
+          <li><strong>Ayudar a reconocer, diagnosticar y recuperarse de errores:</strong> mensajes claros con solución.</li>
+          <li><strong>Ayuda y documentación:</strong> fácil de buscar y enfocada en tareas.</li>
+        </ol>
+      </details>
+    </section>
+
+    <!-- 2 -->
+    <section id="accesibilidad" class="topic" aria-labelledby="t2">
+      <span class="eyebrow">Tema 2</span>
+      <h2 id="t2" class="sec">Usabilidad y accesibilidad</h2>
+      <p class="lead">La accesibilidad web busca que <strong>todas las personas</strong>, incluidas las que tienen alguna discapacidad, puedan percibir, entender, navegar e interactuar con la web.</p>
+      <p>Usabilidad y accesibilidad son conceptos complementarios. La usabilidad pregunta <em>qué tan fácil</em> es usar un sitio. La accesibilidad pregunta <em>si todos pueden usarlo</em>. Un sitio puede ser muy usable para la mayoría y aun así excluir a una persona ciega que navega con lector de pantalla. A la inversa, un sitio técnicamente accesible puede ser confuso para todos.</p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 600 260" role="img" aria-labelledby="f2t">
+          <title id="f2t">Diagrama de dos círculos que se cruzan: usabilidad a la izquierda, accesibilidad a la derecha y, en el centro, una experiencia web para todos</title>
+          <circle cx="225" cy="130" r="112" class="s-acc" fill-opacity=".18" stroke="var(--accent)" stroke-width="3"/>
+          <circle cx="375" cy="130" r="112" fill="#6a3fd1" fill-opacity=".18" stroke="#6a3fd1" stroke-width="3"/>
+          <text x="150" y="122" text-anchor="middle" class="s-txt" font-size="20" font-weight="800">Usabilidad</text>
+          <text x="150" y="146" text-anchor="middle" class="s-muted" font-size="13">Fácil, eficiente</text>
+          <text x="150" y="163" text-anchor="middle" class="s-muted" font-size="13">y satisfactoria</text>
+          <text x="452" y="122" text-anchor="middle" class="s-txt" font-size="20" font-weight="800">Accesibilidad</text>
+          <text x="452" y="146" text-anchor="middle" class="s-muted" font-size="13">Sin barreras</text>
+          <text x="452" y="163" text-anchor="middle" class="s-muted" font-size="13">para nadie</text>
+          <circle cx="300" cy="104" r="15" fill="#f5a400"/>
+          <path d="M293 104l5 5 9-10" stroke="#172033" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="300" y="140" text-anchor="middle" class="s-txt" font-size="14" font-weight="800">Experiencia</text>
+          <text x="300" y="158" text-anchor="middle" class="s-txt" font-size="14" font-weight="800">para todos</text>
+        </svg>
+        <figcaption>Figura 2. Usabilidad y accesibilidad se complementan: donde se cruzan está la web que todos pueden usar.</figcaption>
+      </figure>
+
+      <div class="table-wrap wide">
+        <table>
+          <caption>Comparación entre usabilidad y accesibilidad</caption>
+          <thead><tr><th scope="col">Aspecto</th><th scope="col">Usabilidad</th><th scope="col">Accesibilidad</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Pregunta central</th><td>¿Es fácil, eficiente y satisfactorio de usar?</td><td>¿Puede usarlo cualquier persona, sin importar sus capacidades?</td></tr>
+            <tr><th scope="row">Enfoque</th><td>Experiencia de los usuarios previstos</td><td>Eliminación de barreras para personas con discapacidad</td></tr>
+            <tr><th scope="row">Referente principal</th><td>ISO 9241-11, heurísticas de Nielsen</td><td>WCAG 2.2 del W3C</td></tr>
+            <tr><th scope="row">Cómo se verifica</th><td>Pruebas con usuarios y evaluación heurística</td><td>Revisión de criterios WCAG, herramientas automáticas y tecnologías de apoyo</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Los cuatro principios de las WCAG (POUR)</h3>
+      <div class="grid">
+        <div class="card"><h4>Perceptible</h4><p>Textos alternativos en imágenes, subtítulos en videos y contraste de color suficiente.</p></div>
+        <div class="card"><h4>Operable</h4><p>Todo funciona con teclado, hay tiempo suficiente y nada provoca convulsiones.</p></div>
+        <div class="card"><h4>Comprensible</h4><p>Lenguaje claro, comportamiento predecible y ayuda ante errores en formularios.</p></div>
+        <div class="card"><h4>Robusto</h4><p>Código correcto y semántico que funcione con navegadores y lectores de pantalla.</p></div>
+      </div>
+
+      <h3>Niveles de conformidad</h3>
+      <ul>
+        <li><strong>Nivel A:</strong> requisitos mínimos. Sin ellos, algunos usuarios no pueden acceder.</li>
+        <li><strong>Nivel AA:</strong> el estándar recomendado y exigido por la mayoría de normativas.</li>
+        <li><strong>Nivel AAA:</strong> el máximo nivel. No siempre es alcanzable para todo el contenido.</li>
+      </ul>
+
+      <div class="note"><strong>En Colombia:</strong> la Resolución 1519 de 2020 del Ministerio TIC establece estándares de accesibilidad web para las entidades públicas, tomando como referencia las WCAG. La norma técnica NTC 5854 también aborda la accesibilidad de páginas web.</div>
+
+      <h3>¿Quiénes se benefician?</h3>
+      <p>Personas con discapacidad visual, auditiva, motriz o cognitiva. También personas mayores, quienes usan el celular bajo el sol, quienes tienen una conexión lenta o un brazo lesionado temporalmente. <strong>La accesibilidad mejora la experiencia de todos.</strong></p>
+    </section>
+
+    <!-- 3 -->
+    <section id="ingenieria" class="topic" aria-labelledby="t3">
+      <span class="eyebrow">Tema 3</span>
+      <h2 id="t3" class="sec">Ingeniería de usabilidad</h2>
+      <p class="lead">La ingeniería de usabilidad es el conjunto de procesos, técnicas y métodos que permiten incorporar la usabilidad de forma <strong>sistemática y medible</strong> durante todo el desarrollo de un producto.</p>
+      <p>Su idea central es que la usabilidad no se agrega al final como un adorno. Se planifica, se especifica con objetivos concretos, se diseña y se verifica, igual que cualquier otro requisito de calidad del software.</p>
+
+      <blockquote>La usabilidad debe tratarse como un requisito del sistema que puede definirse, medirse y mejorarse de forma iterativa.<cite>Idea central de la ingeniería de usabilidad, según Nielsen (1993) y Mayhew (1999)</cite></blockquote>
+
+      <h3>Principios fundamentales</h3>
+      <div class="grid">
+        <div class="card"><h4>Enfoque temprano en el usuario</h4><p>Conocer a los usuarios y sus tareas antes de diseñar.</p></div>
+        <div class="card"><h4>Medición empírica</h4><p>Observar a usuarios reales y recoger datos objetivos.</p></div>
+        <div class="card"><h4>Diseño iterativo</h4><p>Diseñar, probar, corregir y repetir el ciclo.</p></div>
+        <div class="card"><h4>Diseño integrado</h4><p>Interfaz, ayuda, documentación y soporte evolucionan juntos.</p></div>
+      </div>
+
+      <figure class="fig">
+        <svg viewBox="0 0 600 235" role="img" aria-labelledby="f3t">
+          <title id="f3t">Panel de métricas de usabilidad: un indicador con puntuación SUS de 78 frente a una meta de 75, y un gráfico de barras en el que el tiempo por tarea baja de 120 a 85 y a 50 segundos en tres versiones, por debajo de la meta de 60 segundos</title>
+          <path d="M50 165A100 100 0 0 1 250 165" fill="none" class="s-stroke" stroke-width="22" stroke-linecap="round"/>
+          <path d="M50 165A100 100 0 0 1 227.05 101.26" fill="none" class="s-stroke-acc" stroke-width="22" stroke-linecap="round"/>
+          <text x="150" y="152" text-anchor="middle" class="s-txt" font-size="42" font-weight="800">78</text>
+          <text x="150" y="192" text-anchor="middle" class="s-txt" font-size="15" font-weight="700">Puntuación SUS</text>
+          <text x="150" y="212" text-anchor="middle" class="s-ok" font-size="13" font-weight="700">✓ Meta: 75</text>
+          <text x="445" y="28" text-anchor="middle" class="s-txt" font-size="15" font-weight="700">Tiempo por tarea (segundos)</text>
+          <line x1="330" y1="195" x2="560" y2="195" class="s-stroke" stroke-width="2"/>
+          <rect x="345" y="65" width="50" height="130" rx="6" class="s-muted" fill-opacity=".45"/>
+          <rect x="420" y="103" width="50" height="92" rx="6" fill="#6a3fd1" fill-opacity=".7"/>
+          <rect x="495" y="141" width="50" height="54" rx="6" class="s-acc"/>
+          <text x="370" y="58" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">120</text>
+          <text x="445" y="96" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">85</text>
+          <text x="520" y="134" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">50</text>
+          <line x1="330" y1="130" x2="560" y2="130" stroke="var(--ok)" stroke-width="2.5" stroke-dasharray="6 5"/>
+          <text x="562" y="126" text-anchor="end" class="s-ok" font-size="12" font-weight="700">Meta: 60 s</text>
+          <text x="370" y="215" text-anchor="middle" class="s-muted" font-size="13">Versión 1</text>
+          <text x="445" y="215" text-anchor="middle" class="s-muted" font-size="13">Versión 2</text>
+          <text x="520" y="215" text-anchor="middle" class="s-muted" font-size="13">Versión 3</text>
+        </svg>
+        <figcaption>Figura 3. Ejemplo: la ingeniería de usabilidad fija metas medibles y comprueba si cada versión las cumple.</figcaption>
+      </figure>
+
+      <h3>Objetivos de usabilidad medibles</h3>
+      <p>Un requisito como "el sitio debe ser fácil de usar" no se puede comprobar. La ingeniería de usabilidad lo convierte en metas verificables:</p>
+      <ul>
+        <li>El 90 % de los usuarios nuevos encuentra un artículo en el repositorio en menos de 2 minutos.</li>
+        <li>Menos de 1 error por usuario al completar el formulario de préstamo.</li>
+        <li>Una puntuación SUS (System Usability Scale) mínima de 75 sobre 100.</li>
+        <li>Un usuario que no ha entrado en un mes completa la renovación sin ayuda.</li>
+      </ul>
+
+      <h3>Beneficios</h3>
+      <ul>
+        <li>Menos costos de soporte y capacitación.</li>
+        <li>Detectar problemas temprano, cuando corregirlos es más barato.</li>
+        <li>Mayor productividad y satisfacción de los usuarios.</li>
+        <li>Mayor uso real de los servicios de información.</li>
+      </ul>
+    </section>
+
+    <!-- 4 -->
+    <section id="ciclo" class="topic" aria-labelledby="t4">
+      <span class="eyebrow">Tema 4</span>
+      <h2 id="t4" class="sec">Ciclo de vida de la ingeniería de usabilidad</h2>
+      <p class="lead">El modelo más reconocido es el de <strong>Deborah Mayhew (1999)</strong>. Organiza las tareas de usabilidad en tres grandes fases que se integran con el desarrollo del software.</p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 640 235" role="img" aria-labelledby="f4t">
+          <title id="f4t">Diagrama del ciclo de vida de Mayhew: tres fases en secuencia, análisis de requisitos, diseño, prueba y desarrollo, e instalación, con una flecha de retroalimentación que vuelve de la instalación al análisis</title>
+          <defs>
+            <marker id="ar4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker>
+          </defs>
+          <g>
+            <rect x="15" y="30" width="175" height="110" rx="14" class="s-bg" stroke="var(--accent)" stroke-width="3"/>
+            <circle cx="45" cy="60" r="16" class="s-acc"/><text x="45" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">1</text>
+            <text x="70" y="58" class="s-txt" font-size="15" font-weight="800">Análisis de</text>
+            <text x="70" y="77" class="s-txt" font-size="15" font-weight="800">requisitos</text>
+            <text x="30" y="108" class="s-muted" font-size="12.5">Usuarios, tareas</text>
+            <text x="30" y="126" class="s-muted" font-size="12.5">y objetivos</text>
+          </g>
+          <g>
+            <rect x="232" y="30" width="175" height="110" rx="14" class="s-bg" stroke="#6a3fd1" stroke-width="3"/>
+            <circle cx="262" cy="60" r="16" fill="#6a3fd1"/><text x="262" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">2</text>
+            <text x="287" y="58" class="s-txt" font-size="15" font-weight="800">Diseño, prueba</text>
+            <text x="287" y="77" class="s-txt" font-size="15" font-weight="800">y desarrollo</text>
+            <text x="247" y="108" class="s-muted" font-size="12.5">3 niveles</text>
+            <text x="247" y="126" class="s-muted" font-size="12.5">iterativos ↻</text>
+          </g>
+          <g>
+            <rect x="449" y="30" width="175" height="110" rx="14" class="s-bg" stroke="var(--ok)" stroke-width="3"/>
+            <circle cx="479" cy="60" r="16" class="s-ok"/><text x="479" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">3</text>
+            <text x="504" y="66" class="s-txt" font-size="15" font-weight="800">Instalación</text>
+            <text x="464" y="108" class="s-muted" font-size="12.5">Uso real</text>
+            <text x="464" y="126" class="s-muted" font-size="12.5">y mejoras</text>
+          </g>
+          <line x1="192" y1="85" x2="226" y2="85" stroke="var(--muted)" stroke-width="3" marker-end="url(#ar4)"/>
+          <line x1="409" y1="85" x2="443" y2="85" stroke="var(--muted)" stroke-width="3" marker-end="url(#ar4)"/>
+          <path d="M536 142V190H102V148" fill="none" stroke="var(--muted)" stroke-width="3" stroke-dasharray="7 6" marker-end="url(#ar4)"/>
+          <text x="320" y="218" text-anchor="middle" class="s-txt" font-size="14" font-weight="700">Retroalimentación de los usuarios</text>
+        </svg>
+        <figcaption>Figura 4. Ciclo de vida de la ingeniería de usabilidad según Mayhew (1999).</figcaption>
+      </figure>
+
+      <ol class="phases wide">
+        <li class="phase">
+          <h4>Análisis de requisitos</h4>
+          <p>Se conoce a fondo al usuario y su contexto antes de diseñar.</p>
+          <ul>
+            <li><strong>Perfil de usuario:</strong> características, conocimientos y experiencia.</li>
+            <li><strong>Análisis contextual de tareas:</strong> cómo trabajan hoy y qué necesitan.</li>
+            <li><strong>Objetivos de usabilidad:</strong> metas cualitativas y cuantitativas.</li>
+            <li><strong>Capacidades y restricciones de la plataforma:</strong> limitaciones técnicas.</li>
+            <li><strong>Principios generales de diseño:</strong> guías y estándares aplicables.</li>
+          </ul>
+        </li>
+        <li class="phase">
+          <h4>Diseño, prueba y desarrollo</h4>
+          <p>Se diseña en tres niveles, cada uno evaluado de forma iterativa antes de pasar al siguiente.</p>
+          <ul>
+            <li><strong>Nivel 1, modelo conceptual:</strong> reingeniería del trabajo, estructura general y navegación. Se prueba con maquetas.</li>
+            <li><strong>Nivel 2, estándares de diseño de pantallas:</strong> reglas visuales y de interacción comunes. Se prueban con prototipos.</li>
+            <li><strong>Nivel 3, diseño detallado de la interfaz:</strong> cada pantalla completa. Se evalúa hasta cumplir los objetivos.</li>
+          </ul>
+        </li>
+        <li class="phase">
+          <h4>Instalación</h4>
+          <p>Tras el lanzamiento se recoge la retroalimentación de los usuarios reales (encuestas, analítica, soporte) para mejorar las siguientes versiones.</p>
+        </li>
+      </ol>
+
+      <h3>El modelo de Nielsen (1993)</h3>
+      <p>Nielsen propuso un ciclo con etapas que se recorren de forma iterativa:</p>
+      <ul class="cycle wide" aria-label="Etapas del ciclo de Nielsen, en orden">
+        <li>Conocer al usuario</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Análisis competitivo</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Fijar objetivos</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Diseño paralelo y participativo</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Guías y heurísticas</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Prototipado</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Pruebas empíricas</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Diseño iterativo</li><li class="arrow" aria-hidden="true">→</li>
+        <li>Retroalimentación de uso real</li>
+      </ul>
+      <div class="note"><strong>Idea clave:</strong> en ambos modelos el ciclo no termina con el lanzamiento. La evaluación continua alimenta nuevas mejoras.</div>
+    </section>
+
+    <!-- 5 -->
+    <section id="metodos" class="topic" aria-labelledby="t5">
+      <span class="eyebrow">Tema 5</span>
+      <h2 id="t5" class="sec">Métodos de evaluación de usabilidad</h2>
+      <p class="lead">Los métodos se agrupan en dos familias. Los de <strong>inspección</strong> los aplican expertos sin usuarios. Los de <strong>prueba</strong> observan o consultan a usuarios reales.</p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 600 235" role="img" aria-labelledby="f5t">
+          <title id="f5t">Ilustración de las dos familias de métodos: a la izquierda, una lupa revisa una pantalla, que representa la inspección por expertos; a la derecha, una persona usa un portátil y se pregunta dónde buscar, que representa las pruebas con usuarios</title>
+          <g transform="translate(40,18)">
+            <rect x="0" y="0" width="220" height="140" rx="12" class="s-bg s-stroke" stroke-width="3"/>
+            <rect x="0" y="0" width="220" height="24" rx="12" class="s-soft"/>
+            <rect x="0" y="12" width="220" height="12" class="s-soft"/>
+            <rect x="18" y="40" width="110" height="10" rx="5" class="s-acc"/>
+            <rect x="18" y="60" width="80" height="7" rx="3.5" class="s-muted" fill-opacity=".4"/>
+            <rect x="18" y="78" width="60" height="40" rx="7" class="s-soft"/>
+            <rect x="86" y="78" width="60" height="40" rx="7" class="s-soft"/>
+            <circle cx="160" cy="92" r="36" class="s-bg" fill-opacity=".6" stroke="var(--accent)" stroke-width="8"/>
+            <circle cx="160" cy="92" r="12" fill="#f5a400"/>
+            <text x="160" y="98" text-anchor="middle" fill="#172033" font-size="16" font-weight="800">!</text>
+            <path d="M186 118L214 146" stroke="var(--accent)" stroke-width="13" stroke-linecap="round"/>
+          </g>
+          <text x="150" y="200" text-anchor="middle" class="s-txt" font-size="17" font-weight="800">Inspección</text>
+          <text x="150" y="222" text-anchor="middle" class="s-muted" font-size="13">Expertos revisan la interfaz</text>
+          <g transform="translate(345,18)">
+            <rect x="120" y="0" width="120" height="40" rx="12" class="s-bg s-stroke" stroke-width="2"/>
+            <path d="M140 40l-6 12 18-12z" class="s-bg"/>
+            <text x="180" y="25" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">¿Dónde busco?</text>
+            <circle cx="60" cy="58" r="20" fill="#6a3fd1"/>
+            <path d="M24 150v-40a36 30 0 0 1 72 0v40z" fill="#6a3fd1" fill-opacity=".75"/>
+            <rect x="92" y="88" width="118" height="62" rx="8" class="s-bg s-stroke" stroke-width="3"/>
+            <rect x="104" y="100" width="60" height="7" rx="3.5" class="s-acc"/>
+            <rect x="104" y="114" width="90" height="6" rx="3" class="s-muted" fill-opacity=".4"/>
+            <rect x="80" y="150" width="142" height="8" rx="4" class="s-muted" fill-opacity=".6"/>
+          </g>
+          <text x="450" y="200" text-anchor="middle" class="s-txt" font-size="17" font-weight="800">Pruebas con usuarios</text>
+          <text x="450" y="222" text-anchor="middle" class="s-muted" font-size="13">Se observa a personas reales</text>
+        </svg>
+        <figcaption>Figura 5. Las dos grandes familias de métodos de evaluación de usabilidad.</figcaption>
+      </figure>
+
+      <div class="table-wrap wide">
+        <table>
+          <caption>Principales métodos de evaluación</caption>
+          <thead><tr><th scope="col">Método</th><th scope="col">Tipo</th><th scope="col">En qué consiste</th><th scope="col">Cuándo usarlo</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Evaluación heurística</th><td><span class="tag ins">Inspección</span></td><td>De 3 a 5 expertos revisan la interfaz contra principios como las heurísticas de Nielsen.</td><td>En cualquier fase. Es rápida y económica.</td></tr>
+            <tr><th scope="row">Recorrido cognitivo</th><td><span class="tag ins">Inspección</span></td><td>El experto simula paso a paso las tareas de un usuario novato y se pregunta si sabrá qué hacer.</td><td>Para evaluar la facilidad de aprendizaje.</td></tr>
+            <tr><th scope="row">Revisión de estándares y guías</th><td><span class="tag ins">Inspección</span></td><td>Se verifica el cumplimiento de normas como las WCAG o guías de estilo.</td><td>Antes del lanzamiento y en auditorías.</td></tr>
+            <tr><th scope="row">Test con usuarios</th><td><span class="tag usr">Con usuarios</span></td><td>Usuarios representativos realizan tareas reales mientras se observan tiempos, errores y comentarios.</td><td>Con prototipos o sitios ya funcionales.</td></tr>
+            <tr><th scope="row">Pensamiento en voz alta</th><td><span class="tag usr">Con usuarios</span></td><td>El participante verbaliza lo que piensa mientras usa el sitio.</td><td>Para entender por qué ocurren los problemas.</td></tr>
+            <tr><th scope="row">Card sorting</th><td><span class="tag usr">Con usuarios</span></td><td>Los usuarios agrupan y nombran tarjetas con contenidos.</td><td>Al definir menús y la arquitectura de la información.</td></tr>
+            <tr><th scope="row">Cuestionarios (SUS)</th><td><span class="tag usr">Con usuarios</span></td><td>10 preguntas estandarizadas que dan una puntuación de 0 a 100.</td><td>Para medir la satisfacción y comparar versiones.</td></tr>
+            <tr><th scope="row">Entrevistas y grupos focales</th><td><span class="tag usr">Con usuarios</span></td><td>Conversaciones guiadas sobre necesidades y percepciones.</td><td>Al inicio, para conocer al usuario.</td></tr>
+            <tr><th scope="row">Analítica web y test A/B</th><td><span class="tag usr">Con usuarios</span></td><td>Datos de uso real o comparación de dos versiones con usuarios reales.</td><td>Con el sitio ya publicado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>¿Cómo elegir?</h3>
+      <ul>
+        <li><strong>Pocos recursos y poco tiempo:</strong> evaluación heurística más un test rápido con 5 usuarios. Según Nielsen, con 5 usuarios se detecta la mayoría de los problemas principales.</li>
+        <li><strong>Diseño de menús o categorías:</strong> card sorting.</li>
+        <li><strong>Medir y comparar:</strong> test con usuarios con métricas y cuestionario SUS.</li>
+        <li><strong>Accesibilidad:</strong> revisión de las WCAG, herramientas automáticas como WAVE y pruebas con lector de pantalla.</li>
+      </ul>
+      <div class="note"><strong>Lo ideal:</strong> combinar métodos. La inspección detecta problemas rápido y las pruebas con usuarios confirman cuáles afectan realmente a las personas.</div>
+    </section>
+
+    <!-- 6 -->
+    <section id="dcu" class="topic" aria-labelledby="t6">
+      <span class="eyebrow">Tema 6</span>
+      <h2 id="t6" class="sec">Diseño web centrado en el usuario</h2>
+      <p class="lead">El Diseño Centrado en el Usuario (DCU) es un enfoque en el que las necesidades, capacidades y objetivos de los usuarios guían <strong>todas las decisiones</strong> del proceso de diseño.</p>
+      <p>Como explican Hassan Montero, Martín Fernández e Iazza (2004), el DCU se caracteriza por involucrar al usuario desde el inicio y evaluar el diseño de forma iterativa. La norma <strong>ISO 9241-210</strong> lo formaliza como un proceso cíclico.</p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 600 290" role="img" aria-labelledby="f6t">
+          <title id="f6t">Diagrama circular del diseño centrado en el usuario: el usuario en el centro, rodeado por cinco fases que se repiten en ciclo: planificar, contexto de uso, requisitos, diseñar y evaluar</title>
+          <circle cx="300" cy="145" r="115" fill="none" class="s-stroke-acc" stroke-width="4" stroke-dasharray="10 8" opacity=".6"/>
+          <circle cx="300" cy="145" r="52" fill="#6a3fd1"/>
+          <circle cx="300" cy="128" r="9" fill="#fff"/>
+          <path d="M283 138l17 3 17-3M300 141v10l-8 13M300 151l8 13" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="300" y="185" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">USUARIO</text>
+          <g font-size="13.5" font-weight="700" text-anchor="middle">
+            <rect x="240" y="12" width="120" height="36" rx="18" class="s-acc"/><text x="300" y="35" fill="#fff">1. Planificar</text>
+            <rect x="350" y="92" width="120" height="36" rx="18" class="s-acc"/><text x="410" y="115" fill="#fff">2. Contexto</text>
+            <rect x="308" y="222" width="120" height="36" rx="18" class="s-acc"/><text x="368" y="245" fill="#fff">3. Requisitos</text>
+            <rect x="172" y="222" width="120" height="36" rx="18" class="s-acc"/><text x="232" y="245" fill="#fff">4. Diseñar</text>
+            <rect x="130" y="92" width="120" height="36" rx="18" class="s-acc"/><text x="190" y="115" fill="#fff">5. Evaluar</text>
+          </g>
+          <text x="300" y="282" text-anchor="middle" class="s-muted" font-size="13">↻ Se repite hasta cumplir los requisitos</text>
+        </svg>
+        <figcaption>Figura 6. El ciclo del diseño centrado en el usuario según la norma ISO 9241-210.</figcaption>
+      </figure>
+
+      <h3>El proceso iterativo del DCU</h3>
+      <ul class="cycle wide" aria-label="Fases del diseño centrado en el usuario, en ciclo">
+        <li>1. Planificar</li><li class="arrow" aria-hidden="true">→</li>
+        <li>2. Entender el contexto de uso</li><li class="arrow" aria-hidden="true">→</li>
+        <li>3. Especificar requisitos</li><li class="arrow" aria-hidden="true">→</li>
+        <li>4. Diseñar soluciones</li><li class="arrow" aria-hidden="true">→</li>
+        <li>5. Evaluar</li><li class="arrow" aria-hidden="true">↺</li>
+        <li>Repetir hasta cumplir los requisitos</li>
+      </ul>
+
+      <h3>Técnicas habituales en cada etapa</h3>
+      <div class="grid">
+        <div class="card"><h4>Investigación</h4><p>Entrevistas, encuestas, observación y análisis de la competencia.</p></div>
+        <div class="card"><h4>Modelado</h4><p>Personas (perfiles arquetípicos), escenarios y mapas del recorrido del usuario.</p></div>
+        <div class="card"><h4>Arquitectura de la información</h4><p>Card sorting, organización, etiquetado y sistemas de navegación y búsqueda.</p></div>
+        <div class="card"><h4>Prototipado</h4><p>Bocetos en papel, wireframes y prototipos interactivos.</p></div>
+        <div class="card"><h4>Evaluación</h4><p>Test con usuarios, evaluación heurística y analítica.</p></div>
+      </div>
+
+      <h3>Principios de diseño web centrado en el usuario</h3>
+      <ul>
+        <li><strong>Claridad sobre creatividad:</strong> el usuario no debería tener que pensar para entender qué hacer (Krug, 2014).</li>
+        <li><strong>Jerarquía visual:</strong> lo más importante destaca primero.</li>
+        <li><strong>Navegación consistente y predecible:</strong> el usuario siempre sabe dónde está y cómo volver.</li>
+        <li><strong>Contenido escaneable:</strong> títulos, listas y párrafos cortos, porque en la web se lee "por encima".</li>
+        <li><strong>Diseño responsive:</strong> el sitio se adapta a cualquier dispositivo.</li>
+        <li><strong>Accesibilidad desde el inicio:</strong> no como corrección posterior.</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section id="referencias" class="topic" aria-labelledby="t7">
+      <span class="eyebrow">Tema 7</span>
+      <h2 id="t7" class="sec">Referencias bibliográficas</h2>
+      <p>Formato APA, 7.ª edición.</p>
+      <ol class="refs">
+        <li>Brooke, J. (1996). SUS: A "quick and dirty" usability scale. En P. W. Jordan, B. Thomas, B. A. Weerdmeester y I. L. McClelland (Eds.), <em>Usability evaluation in industry</em> (pp. 189–194). Taylor &amp; Francis.</li>
+        <li>Hassan Montero, Y., y Martín Fernández, F. J. (2003). Guía de evaluación heurística de sitios web. <em>No Solo Usabilidad</em>, (2). <a href="https://www.nosolousabilidad.com/articulos/heuristica.htm">https://www.nosolousabilidad.com/articulos/heuristica.htm</a></li>
+        <li>Hassan Montero, Y., Martín Fernández, F. J., e Iazza, G. (2004). Diseño web centrado en el usuario: usabilidad y arquitectura de la información. <em>Hipertext.net</em>, (2). <a href="https://www.upf.edu/hipertextnet/numero-2/diseno_web.html">https://www.upf.edu/hipertextnet/numero-2/diseno_web.html</a></li>
+        <li>International Organization for Standardization. (2018). <em>Ergonomics of human-system interaction — Part 11: Usability: Definitions and concepts</em> (ISO 9241-11:2018).</li>
+        <li>International Organization for Standardization. (2019). <em>Ergonomics of human-system interaction — Part 210: Human-centred design for interactive systems</em> (ISO 9241-210:2019).</li>
+        <li>Krug, S. (2014). <em>Don't make me think, revisited: A common sense approach to web usability</em> (3.ª ed.). New Riders.</li>
+        <li>Mayhew, D. J. (1999). <em>The usability engineering lifecycle: A practitioner's handbook for user interface design</em>. Morgan Kaufmann.</li>
+        <li>Ministerio de Tecnologías de la Información y las Comunicaciones. (2020). <em>Resolución 1519 de 2020</em>. Gobierno de Colombia.</li>
+        <li>Nielsen, J. (1993). <em>Usability engineering</em>. Academic Press.</li>
+        <li>Nielsen, J. (1994, actualizado 2024). <em>10 usability heuristics for user interface design</em>. Nielsen Norman Group. <a href="https://www.nngroup.com/articles/ten-usability-heuristics/">https://www.nngroup.com/articles/ten-usability-heuristics/</a></li>
+        <li>Norman, D. A. (2013). <em>The design of everyday things</em> (ed. revisada y ampliada). Basic Books.</li>
+        <li>Rubin, J., y Chisnell, D. (2008). <em>Handbook of usability testing: How to plan, design, and conduct effective tests</em> (2.ª ed.). Wiley.</li>
+        <li>World Wide Web Consortium. (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.2</em>. <a href="https://www.w3.org/TR/WCAG22/">https://www.w3.org/TR/WCAG22/</a></li>
+      </ol>
+    </section>
+
+    <!-- Extra -->
+    <section id="este-sitio" class="topic" aria-labelledby="t8">
+      <span class="eyebrow">Coherencia</span>
+      <h2 id="t8" class="sec">Cómo aplicamos la usabilidad en este sitio</h2>
+      <p>Este sitio fue diseñado siguiendo los mismos principios que describe:</p>
+      <ul class="applied wide">
+        <li><span aria-hidden="true">✓</span><span><strong>Navegación visible:</strong> índice fijo que resalta la sección en la que estás (heurística 1).</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Enlace "Saltar al contenido":</strong> aparece al presionar Tab, para usuarios de teclado y lector de pantalla.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Uso completo con teclado:</strong> con foco visible en amarillo en cada elemento.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Control del usuario:</strong> botones A− y A+ para el tamaño del texto y modo claro u oscuro.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Contraste AA:</strong> colores que cumplen la relación mínima de las WCAG.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>HTML semántico:</strong> encabezados jerárquicos, regiones y tablas con encabezados para tecnologías de apoyo.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Lectura cómoda:</strong> líneas de unos 70 caracteres, párrafos cortos y listas escaneables.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Responsive:</strong> se adapta a celulares, tablets y computadores.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Respeto a preferencias:</strong> reduce animaciones si el sistema lo pide y detecta el modo oscuro.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Consistencia:</strong> mismo patrón visual en todos los temas (heurística 4).</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Diseño minimalista:</strong> sin publicidad ni elementos que distraigan (heurística 8).</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Imágenes con texto alternativo:</strong> cada ilustración tiene una descripción que los lectores de pantalla pueden leer.</span></li>
+        <li><span aria-hidden="true">✓</span><span><strong>Apto para imprimir:</strong> al imprimir se ocultan los menús y queda solo el contenido.</span></li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <svg class="flogo" width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e4fd8"/><stop offset="1" stop-color="#6a3fd1"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#lg2)"/><circle cx="24" cy="14.5" r="3.4" fill="#fff"/><path d="M13.5 20.5l10.5 2 10.5-2M24 22.5v7l-5.5 8.5M24 29.5l5.5 8.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  <p><strong>Diseñar para Todos</strong> · Guía de usabilidad y accesibilidad web</p>
+  <p>Universidad Manuela Beltrán (UMB) · Trabajo académico · 2026</p>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="Volver arriba">↑</button>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  function store(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+
+  // Tema
+  var themeBtn = document.getElementById('themeBtn');
+  function isDark(){
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function syncTheme(){
+    var d = isDark();
+    themeBtn.setAttribute('aria-pressed', d ? 'true' : 'false');
+    themeBtn.setAttribute('aria-label', d ? 'Activar modo claro' : 'Activar modo oscuro');
+  }
+  var saved = load('dpt-theme');
+  if (saved) root.setAttribute('data-theme', saved);
+  syncTheme();
+  themeBtn.addEventListener('click', function(){
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next); store('dpt-theme', next); syncTheme();
+  });
+
+  // Tamaño de texto
+  var sizes = [87.5, 100, 112.5, 125, 140];
+  var idx = parseInt(load('dpt-size') || '1', 10);
+  if (isNaN(idx) || idx < 0 || idx >= sizes.length) idx = 1;
+  function applySize(){ root.style.fontSize = sizes[idx] + '%'; store('dpt-size', String(idx)); }
+  applySize();
+  document.getElementById('fontUp').addEventListener('click', function(){ if (idx < sizes.length-1){ idx++; applySize(); } });
+  document.getElementById('fontDown').addEventListener('click', function(){ if (idx > 0){ idx--; applySize(); } });
+
+  // Menú móvil
+  var menuBtn = document.getElementById('menuBtn'), toc = document.getElementById('toc');
+  menuBtn.addEventListener('click', function(){
+    var open = toc.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  toc.addEventListener('click', function(e){
+    if (e.target.closest('a') && window.matchMedia('(max-width: 900px)').matches){
+      toc.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false');
+    }
+  });
+
+  // Sección activa en el índice
+  var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){
+          links.forEach(function(a){ a.removeAttribute('aria-current'); });
+          var a = map[en.target.id]; if (a) a.setAttribute('aria-current','true');
+        }
+      });
+    }, {rootMargin:'-40% 0px -55% 0px'});
+    Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+  }
+
+  // Volver arriba
+  var toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function(){ toTop.classList.toggle('show', window.scrollY > 600); }, {passive:true});
+  toTop.addEventListener('click', function(){
+    window.scrollTo({top:0});
+    document.getElementById('contenido').focus({preventScroll:true});
+  });
+})();
+</script>
+</body>
+</html>
