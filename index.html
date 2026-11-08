@@ -5,30 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Diseñar para Todos | Guía de usabilidad y accesibilidad web</title>
 <meta name="description" content="Guía informativa sobre usabilidad, accesibilidad, ingeniería de usabilidad, métodos de evaluación y diseño web centrado en el usuario. UMB.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%231e4fd8'/%3E%3Ccircle cx='24' cy='14' r='4' fill='white'/%3E%3Cpath d='M13 20l11 2 11-2M24 22v8l-6 9M24 30l6 9' stroke='white' stroke-width='3.2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%230f7a4a'/%3E%3Ccircle cx='14' cy='18' r='5' fill='%23ffd166'/%3E%3Ccircle cx='34' cy='18' r='5' fill='%23bfe6cf'/%3E%3Ccircle cx='24' cy='22' r='6.5' fill='white'/%3E%3Cpath d='M11 48Q11 31 24 31Q37 31 37 48Z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f7fb; --surface:#ffffff; --surface-2:#eef1f8;
-    --text:#172033; --muted:#4a5568; --border:#d6dbe7;
-    --accent:#1e4fd8; --accent-strong:#163da8; --accent-soft:#e3eafe;
-    --ok:#0f7a4f; --warn:#9a5b00;
+    --bg:#f3f8f5; --surface:#ffffff; --surface-2:#e9f3ed;
+    --text:#14251c; --muted:#45584d; --border:#d0e1d6;
+    --accent:#0f7a4a; --accent-strong:#0b5e39; --accent-soft:#dcf3e6; --on-accent:#ffffff;
+    --ok:#4d7c0f; --warn:#9a5b00;
     --focus:#f5a400;
     --radius:14px; --shadow:0 2px 10px rgba(20,30,60,.07);
     --maxw:72ch;
   }
   :root[data-theme="dark"]{
-    --bg:#0f1420; --surface:#171e2e; --surface-2:#1f2840;
-    --text:#e8ecf5; --muted:#b4bdd0; --border:#2f3a55;
-    --accent:#8fb0ff; --accent-strong:#b5cbff; --accent-soft:#22305a;
-    --ok:#5fd3a0; --warn:#f2c066;
+    --bg:#0c1511; --surface:#13201a; --surface-2:#1a2c23;
+    --text:#e5f0ea; --muted:#acc3b6; --border:#2a4235;
+    --accent:#6fdc9f; --accent-strong:#a6eec4; --accent-soft:#173a2a; --on-accent:#0c1511;
+    --ok:#b5e86b; --warn:#f2c066;
     --shadow:0 2px 10px rgba(0,0,0,.35);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0f1420; --surface:#171e2e; --surface-2:#1f2840;
-      --text:#e8ecf5; --muted:#b4bdd0; --border:#2f3a55;
-      --accent:#8fb0ff; --accent-strong:#b5cbff; --accent-soft:#22305a;
-      --ok:#5fd3a0; --warn:#f2c066;
+      --bg:#0c1511; --surface:#13201a; --surface-2:#1a2c23;
+      --text:#e5f0ea; --muted:#acc3b6; --border:#2a4235;
+      --accent:#6fdc9f; --accent-strong:#a6eec4; --accent-soft:#173a2a; --on-accent:#0c1511;
+      --ok:#b5e86b; --warn:#f2c066;
       --shadow:0 2px 10px rgba(0,0,0,.35);
     }
   }
@@ -36,17 +39,17 @@
   html{scroll-behavior:smooth; scroll-padding-top:80px}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important; animation:none!important} }
   body{margin:0; background:var(--bg); color:var(--text);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     font-size:1.0625rem; line-height:1.7}
   a{color:var(--accent)}
   a:hover{color:var(--accent-strong)}
   :focus-visible{outline:3px solid var(--focus); outline-offset:3px; border-radius:4px}
-  .skip{position:absolute; left:-999px; top:8px; background:var(--accent); color:#fff; padding:.6rem 1rem; border-radius:8px; z-index:100; font-weight:600}
-  .skip:focus{left:16px; color:#fff}
+  .skip{position:absolute; left:-999px; top:8px; background:var(--accent); color:var(--on-accent); padding:.6rem 1rem; border-radius:8px; z-index:100; font-weight:600}
+  .skip:focus{left:16px; color:var(--on-accent)}
   .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 
   /* Header */
-  header.top{position:sticky; top:0; z-index:50; background:var(--surface); border-bottom:1px solid var(--border); box-shadow:var(--shadow)}
+  header.top{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); box-shadow:var(--shadow)}
   .top-inner{max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:1rem; padding:.7rem 16px}
   .brand{display:flex; align-items:center; gap:.6rem; text-decoration:none; color:var(--text); font-weight:800; font-size:1.15rem; margin-right:auto}
   .brand svg{flex:none}
@@ -66,37 +69,61 @@
   nav.toc a .n{flex:none; width:1.6rem; height:1.6rem; border-radius:50%; background:var(--surface-2); display:grid; place-items:center; font-size:.8rem; font-weight:700}
   nav.toc a:hover{background:var(--surface-2)}
   nav.toc a[aria-current="true"]{background:var(--accent-soft); color:var(--accent-strong); font-weight:700}
-  nav.toc a[aria-current="true"] .n{background:var(--accent); color:#fff}
+  nav.toc a[aria-current="true"] .n{background:var(--accent); color:var(--on-accent)}
 
-  main{min-width:0}
-  .hero{background:linear-gradient(135deg,var(--accent) 0%, #6a3fd1 100%); color:#fff; border-radius:var(--radius); padding:2.5rem 2rem; margin-bottom:2rem}
-  .hero h1{font-size:clamp(2rem,5vw,3rem); line-height:1.1; margin:0 0 .5rem}
-  .hero p{max-width:60ch; margin:.4rem 0; font-size:1.1rem}
-  .hero .kicker{text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; font-weight:700; opacity:.9}
-  .chips{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem; padding:0; list-style:none}
-  .chips a{display:inline-block; background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.4); padding:.4rem .8rem; border-radius:999px; text-decoration:none; font-size:.9rem}
-  .chips a:hover{background:rgba(255,255,255,.28); color:#fff}
+  .content{min-width:0}
+  /* Portada estilo plantilla */
+  .hero{position:relative; overflow:hidden; color:#fff; padding:3.5rem 16px 7rem;
+    background:radial-gradient(circle at 88% 18%, rgba(255,209,102,.28), transparent 38%), radial-gradient(circle at 5% 90%, rgba(111,220,159,.25), transparent 35%), linear-gradient(135deg,#0f7a4a 0%, #0a5a4f 100%)}
+  .hero::before{content:""; position:absolute; width:420px; height:420px; border-radius:50%; border:60px solid rgba(255,255,255,.05); right:-120px; bottom:-200px}
+  .hero-inner{position:relative; max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.2fr 1fr; gap:2.5rem; align-items:center}
+  .hero .kicker{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; font-size:.9rem; font-weight:600; margin:0 0 1rem; opacity:.95}
+  .hero .pill{background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35); padding:.25rem .75rem; border-radius:999px; font-weight:700; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em}
+  .hero h1{font-size:clamp(2.6rem,6.5vw,4.4rem); line-height:1.02; letter-spacing:-.02em; margin:0 0 1rem; font-weight:800}
+  .hero .hl{color:#ffd166}
+  .hero-lead{font-size:clamp(1.1rem,2vw,1.3rem); max-width:34ch; margin:0 0 .8rem; font-weight:500}
+  .hero p{max-width:52ch}
+  .hero .sub{opacity:.9; margin:0}
+  .cta{display:flex; flex-wrap:wrap; gap:.8rem; margin-top:1.8rem}
+  .btn-primary,.btn-ghost{display:inline-flex; align-items:center; gap:.4rem; min-height:50px; padding:.8rem 1.5rem; border-radius:999px; font-weight:800; text-decoration:none; transition:transform .2s, box-shadow .2s, background .2s}
+  .btn-primary{background:#ffd166; color:#14251c; box-shadow:0 8px 20px rgba(0,0,0,.2)}
+  .btn-primary:hover{color:#14251c; transform:translateY(-2px); box-shadow:0 12px 26px rgba(0,0,0,.25)}
+  .btn-ghost{color:#fff; border:2px solid rgba(255,255,255,.75)}
+  .btn-ghost:hover{color:#0a5a4f; background:#fff}
+  .wave{position:absolute; left:0; bottom:-1px; width:100%; height:80px; display:block}
+  .wave path{fill:var(--bg)}
+  .stats{position:relative; z-index:2; width:calc(100% - 32px); max-width:1000px; margin:-4rem auto 0; list-style:none; padding:1.4rem 1rem; display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; background:var(--surface); border:1px solid var(--border); border-radius:20px; box-shadow:0 14px 34px rgba(10,60,40,.14)}
+  .stats li{text-align:center; padding:.3rem}
+  .stats li + li{border-left:1px solid var(--border)}
+  .stats strong{display:block; font-size:2.2rem; line-height:1.1; color:var(--accent); font-weight:800}
+  .stats span{font-size:.92rem; color:var(--muted)}
+  .band{display:grid; grid-template-columns:auto 1fr; gap:1.5rem; align-items:center; margin:0 0 1.5rem; padding:2rem; border-radius:20px; color:#fff; background:linear-gradient(120deg,#0a5a4f,#0f7a4a); box-shadow:var(--shadow)}
+  .band-num{margin:0; font-size:clamp(2rem,5vw,3rem); font-weight:800; line-height:1; color:#ffd166}
+  .band p:last-child{margin:0; font-size:1.05rem}
 
-  section.topic{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; margin-bottom:1.5rem; box-shadow:var(--shadow)}
+  section.topic{position:relative; overflow:hidden; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:2.6rem 2.4rem; margin-bottom:1.6rem; box-shadow:0 6px 22px rgba(10,60,40,.07)}
+  .content > section.topic:nth-of-type(even){background:linear-gradient(160deg, var(--surface) 55%, var(--accent-soft) 100%)}
+  section.topic::after{content:attr(data-num); position:absolute; top:.6rem; right:1.6rem; font-size:6.5rem; font-weight:800; line-height:1; color:var(--accent); opacity:.08; pointer-events:none}
   section.topic > *{max-width:var(--maxw)}
   section.topic .wide{max-width:none}
-  .eyebrow{display:inline-block; font-size:.8rem; font-weight:700; color:var(--accent-strong); background:var(--accent-soft); padding:.2rem .6rem; border-radius:999px; margin-bottom:.4rem}
-  h2.sec{font-size:clamp(1.5rem,3vw,1.9rem); line-height:1.2; margin:.2rem 0 1rem}
+  .eyebrow{display:inline-block; text-transform:uppercase; letter-spacing:.1em; font-size:.75rem; font-weight:700; color:var(--accent-strong); background:var(--accent-soft); padding:.2rem .6rem; border-radius:999px; margin-bottom:.4rem}
+  h2.sec{font-size:clamp(1.6rem,3.4vw,2.2rem); line-height:1.15; letter-spacing:-.01em; margin:.3rem 0 1rem; font-weight:800}
   h3{font-size:1.2rem; margin:1.6rem 0 .5rem}
   .lead{font-size:1.12rem; color:var(--muted)}
   .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1rem; margin:1rem 0}
-  .card{background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:1rem 1.1rem}
+  .card{background:var(--surface); border:1px solid var(--border); border-top:4px solid var(--accent); border-radius:14px; padding:1.1rem 1.2rem; box-shadow:0 2px 8px rgba(10,60,40,.05); transition:transform .2s, box-shadow .2s}
+  .card:hover{transform:translateY(-4px); box-shadow:0 12px 26px rgba(10,60,40,.13)}
   .card h4{margin:0 0 .3rem; font-size:1.02rem}
   .card p{margin:0; font-size:.97rem; color:var(--muted)}
   .note{border-left:5px solid var(--accent); background:var(--accent-soft); padding:1rem 1.2rem; border-radius:0 10px 10px 0; margin:1.2rem 0}
   .note strong{color:var(--accent-strong)}
-  blockquote{margin:1.2rem 0; padding:1rem 1.2rem; border-left:5px solid #6a3fd1; background:var(--surface-2); border-radius:0 10px 10px 0; font-style:italic}
+  blockquote{margin:1.2rem 0; padding:1rem 1.2rem; border-left:5px solid #0b7a66; background:var(--surface-2); border-radius:0 10px 10px 0; font-style:italic}
   blockquote cite{display:block; font-style:normal; font-size:.9rem; color:var(--muted); margin-top:.4rem}
 
   /* Lifecycle */
   .phases{list-style:none; padding:0; margin:1.2rem 0; display:grid; gap:1rem; counter-reset:ph}
   .phase{position:relative; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.2rem 1.1rem 4.2rem}
-  .phase::before{counter-increment:ph; content:counter(ph); position:absolute; left:1rem; top:1rem; width:2.4rem; height:2.4rem; border-radius:50%; background:var(--accent); color:#fff; display:grid; place-items:center; font-weight:800}
+  .phase::before{counter-increment:ph; content:counter(ph); position:absolute; left:1rem; top:1rem; width:2.4rem; height:2.4rem; border-radius:50%; background:var(--accent); color:var(--on-accent); display:grid; place-items:center; font-weight:800}
   .phase h4{margin:0 0 .3rem}
   .phase ul{margin:.3rem 0 0; padding-left:1.1rem}
   .cycle{display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; list-style:none; padding:0; margin:1rem 0}
@@ -137,17 +164,24 @@
   .fig figcaption{font-size:.9rem; color:var(--muted); margin-top:.6rem}
   .fig text, .hero-art text{font-family:inherit}
   .s-bg{fill:var(--surface)} .s-soft{fill:var(--accent-soft)} .s-acc{fill:var(--accent)}
-  .s-txt{fill:var(--text)} .s-muted{fill:var(--muted)} .s-ok{fill:var(--ok)}
+  .s-txt{fill:var(--text)} .s-on{fill:var(--on-accent)} .s-muted{fill:var(--muted)} .s-ok{fill:var(--ok)}
   .s-stroke{stroke:var(--border)} .s-stroke-acc{stroke:var(--accent)} .s-stroke-txt{stroke:var(--text)}
-  .hero-grid{display:grid; grid-template-columns:1.35fr 1fr; gap:1.5rem; align-items:center}
-  .hero-art svg{width:100%; height:auto; max-width:360px; display:block; margin:0 auto; filter:drop-shadow(0 10px 20px rgba(0,0,0,.2))}
+  .hero-art svg{width:100%; height:auto; max-width:340px; display:block; margin:0 auto; filter:drop-shadow(0 12px 24px rgba(0,0,0,.25))}
   .logo-lg{display:block; margin-bottom:.8rem}
-  footer .flogo{display:inline-block; vertical-align:middle; margin-bottom:.4rem}
+  .site-footer{background:#0a3d2c; color:#d3e9dc; margin-top:1rem}
+  .foot-inner{max-width:1200px; margin:0 auto; padding:3rem 16px 2rem; display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:2rem}
+  .foot-brand .fb{display:flex; align-items:center; gap:.7rem; font-size:1.25rem; font-weight:800; color:#fff; margin-bottom:.6rem}
+  .foot-brand p{margin:0; max-width:40ch; font-size:.95rem}
+  .site-footer h2{font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:#ffd166; margin:0 0 .8rem}
+  .site-footer ul{list-style:none; margin:0; padding:0}
+  .site-footer li{margin:.35rem 0}
+  .site-footer a{color:#d3e9dc; text-decoration:none; font-size:.95rem}
+  .site-footer a:hover{color:#fff; text-decoration:underline}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.12); text-align:center; padding:1.1rem 16px; font-size:.88rem; color:#a9cdb8}
 
-  footer{border-top:1px solid var(--border); background:var(--surface); color:var(--muted); text-align:center; padding:2rem 16px; font-size:.92rem}
-  footer strong{color:var(--text)}
-
-  .to-top{position:fixed; right:16px; bottom:16px; z-index:40; border-radius:50%; width:52px; height:52px; background:var(--accent); color:#fff; border:none; box-shadow:var(--shadow); cursor:pointer; font-size:1.4rem; opacity:0; pointer-events:none; transition:opacity .2s}
+  .js-anim .reveal{opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease}
+  .js-anim .reveal.in{opacity:1; transform:none}
+  .to-top{position:fixed; right:16px; bottom:16px; z-index:40; border-radius:50%; width:52px; height:52px; background:var(--accent); color:var(--on-accent); border:none; box-shadow:var(--shadow); cursor:pointer; font-size:1.4rem; opacity:0; pointer-events:none; transition:opacity .2s}
   .to-top.show{opacity:1; pointer-events:auto}
 
   @media (max-width: 900px){
@@ -155,10 +189,15 @@
     .menu-btn{display:inline-flex}
     nav.toc{position:static; display:none}
     nav.toc.open{display:block}
-    section.topic{padding:1.4rem 1.1rem}
-    .hero{padding:1.8rem 1.3rem}
+    section.topic{padding:1.6rem 1.2rem}
+    .hero{padding:2rem 16px 6rem}
+    .hero-inner{grid-template-columns:1fr; gap:1.5rem; text-align:left}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stats li:nth-child(3){border-left:none}
+    .band{grid-template-columns:1fr; gap:.6rem; padding:1.5rem}
+    .foot-inner{grid-template-columns:1fr}
+    section.topic::after{font-size:4.5rem; right:1rem}
     .tools .label{display:none}
-    .hero-grid{grid-template-columns:1fr}
     .hero-art{order:-1}
     .hero-art svg{max-width:260px}
     .brand{font-size:1rem; white-space:nowrap}
@@ -176,8 +215,10 @@
     header.top, nav.toc, .to-top, .tools{display:none!important}
     .layout{display:block}
     section.topic{box-shadow:none; break-inside:avoid-page}
-    .hero{background:none; color:#000; border:1px solid #999}
-    .hero .chips{display:none}
+    .hero{background:none; color:#000; padding:1rem}
+    .wave,.cta,.stats,.hero-art{display:none}
+    .reveal{opacity:1!important; transform:none!important}
+    .site-footer{background:none; color:#000}
   }
 </style>
 </head>
@@ -187,7 +228,7 @@
 <header class="top">
   <div class="top-inner">
     <a class="brand" href="#inicio" aria-label="Diseñar para Todos, ir al inicio">
-      <svg width="42" height="42" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e4fd8"/><stop offset="1" stop-color="#6a3fd1"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#lg1)"/><circle cx="24" cy="24" r="16" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/><circle cx="24" cy="14.5" r="3.4" fill="#fff"/><path d="M13.5 20.5l10.5 2 10.5-2M24 22.5v7l-5.5 8.5M24 29.5l5.5 8.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="38" cy="38" r="7.5" fill="#f5a400" stroke="#fff" stroke-width="2"/><path d="M34.6 38l2.4 2.4 4.2-4.4" stroke="#172033" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="42" height="42" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14935a"/><stop offset="1" stop-color="#0a5a4f"/></linearGradient><clipPath id="lg1c"><rect width="48" height="48" rx="13"/></clipPath></defs><rect width="48" height="48" rx="13" fill="url(#lg1)"/><g clip-path="url(#lg1c)"><circle cx="14" cy="18" r="5" fill="#ffd166"/><path d="M4 40Q4 26 14 26Q24 26 24 40Z" fill="#ffd166"/><circle cx="34" cy="18" r="5" fill="#bfe6cf"/><path d="M24 40Q24 26 34 26Q44 26 44 40Z" fill="#bfe6cf"/><circle cx="24" cy="22" r="6.2" fill="#fff"/><path d="M11 50Q11 31 24 31Q37 31 37 50Z" fill="#fff"/></g></svg>
       <span>Diseñar para Todos<small>Usabilidad y accesibilidad web</small></span>
     </a>
     <div class="tools" role="group" aria-label="Opciones de visualización">
@@ -199,6 +240,77 @@
   </div>
 </header>
 
+<main id="contenido" tabindex="-1">
+  <section id="inicio" class="hero" aria-labelledby="t-inicio">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="kicker"><span class="pill">Guía informativa</span> Universidad Manuela Beltrán</p>
+        <h1 id="t-inicio">Diseñar para <span class="hl">Todos</span></h1>
+        <p class="hero-lead">Todo lo que necesitas saber para crear sitios web fáciles de usar y accesibles para cualquier persona.</p>
+        <p class="sub">Usabilidad, accesibilidad, ingeniería de usabilidad, métodos de evaluación y diseño centrado en el usuario, explicados de forma clara.</p>
+        <div class="cta">
+          <a class="btn-primary" href="#nociones">Explorar los temas <span aria-hidden="true">→</span></a>
+          <a class="btn-ghost" href="#referencias">Ver referencias</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 400 400" role="img" aria-labelledby="hero-t">
+          <title id="hero-t">Ilustración de tres personas diversas sonriendo dentro de un círculo amarillo: una mujer de cabello castaño, una mujer de cabello afro con gafas y un hombre de piel morena con corbata, que representan a los usuarios para quienes se diseña la web</title>
+          <defs><clipPath id="hc"><circle cx="200" cy="200" r="190"/></clipPath></defs>
+          <circle cx="200" cy="200" r="190" fill="#ffd166"/>
+          <g clip-path="url(#hc)">
+            <!-- persona izquierda -->
+            <path d="M50 175Q48 95 118 92Q186 95 182 170L186 262Q115 282 46 262Z" fill="#8a4b24"/>
+            <rect x="100" y="200" width="30" height="50" fill="#e5b08c"/>
+            <path d="M28 400V312Q28 256 115 250Q202 256 202 312V400Z" fill="#34b273"/>
+            <path d="M92 252L115 282L138 252Z" fill="#fff"/>
+            <circle cx="67" cy="165" r="9" fill="#eab590"/><circle cx="163" cy="165" r="9" fill="#eab590"/>
+            <ellipse cx="115" cy="160" rx="48" ry="55" fill="#f4c7a3"/>
+            <path d="M66 152Q68 100 118 100Q166 102 166 147Q142 116 100 127Q80 133 66 152Z" fill="#8a4b24"/>
+            <circle cx="98" cy="163" r="5.5" fill="#1f2a37"/><circle cx="132" cy="163" r="5.5" fill="#1f2a37"/>
+            <circle cx="88" cy="182" r="8" fill="#f2907e" opacity=".45"/><circle cx="142" cy="182" r="8" fill="#f2907e" opacity=".45"/>
+            <path d="M103 189Q115 199 127 189" stroke="#1f2a37" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- persona derecha -->
+            <rect x="272" y="200" width="36" height="50" fill="#94593a"/>
+            <path d="M198 400V312Q198 256 290 250Q382 256 382 312V400Z" fill="#e4efe9"/>
+            <path d="M262 251L290 274L276 300Z" fill="#fff"/><path d="M318 251L290 274L304 300Z" fill="#fff"/>
+            <path d="M283 262L297 262L304 336L290 356L276 336Z" fill="#ef6351"/>
+            <circle cx="242" cy="165" r="9" fill="#a26a45"/><circle cx="338" cy="165" r="9" fill="#a26a45"/>
+            <ellipse cx="290" cy="160" rx="48" ry="55" fill="#b4774f"/>
+            <path d="M242 152Q236 94 292 91Q330 91 342 116Q360 98 352 68Q382 96 346 142Q332 117 300 122Q268 127 242 152Z" fill="#1f2a37"/>
+            <circle cx="273" cy="163" r="5.5" fill="#1f2a37"/><circle cx="307" cy="163" r="5.5" fill="#1f2a37"/>
+            <circle cx="262" cy="182" r="8" fill="#e0715e" opacity=".4"/><circle cx="318" cy="182" r="8" fill="#e0715e" opacity=".4"/>
+            <path d="M278 189Q290 199 302 189" stroke="#1f2a37" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- persona central -->
+            <g fill="#2b1a12"><circle cx="200" cy="198" r="76"/><circle cx="138" cy="184" r="32"/><circle cx="262" cy="184" r="32"/><circle cx="200" cy="128" r="42"/><circle cx="152" cy="142" r="30"/><circle cx="248" cy="142" r="30"/></g>
+            <rect x="182" y="255" width="36" height="45" fill="#c98757"/>
+            <path d="M98 400V352Q98 296 200 290Q302 296 302 352V400Z" fill="#0b5e39"/>
+            <path d="M174 292L200 334L226 292Z" fill="#fff"/>
+            <path d="M174 292L200 334L188 400H150L160 300Z" fill="#0f7a4a"/><path d="M226 292L200 334L212 400H250L240 300Z" fill="#0f7a4a"/>
+            <circle cx="149" cy="220" r="10" fill="#c98757"/><circle cx="251" cy="220" r="10" fill="#c98757"/>
+            <circle cx="149" cy="238" r="4.5" fill="#ffd166"/><circle cx="251" cy="238" r="4.5" fill="#ffd166"/>
+            <ellipse cx="200" cy="214" rx="52" ry="60" fill="#d9996a"/>
+            <path d="M150 196Q160 150 200 150Q240 150 250 196Q228 170 200 172Q172 170 150 196Z" fill="#2b1a12"/>
+            <circle cx="180" cy="214" r="16" fill="#fff" fill-opacity=".3" stroke="#1f2a37" stroke-width="4"/>
+            <circle cx="220" cy="214" r="16" fill="#fff" fill-opacity=".3" stroke="#1f2a37" stroke-width="4"/>
+            <path d="M196 212Q200 208 204 212" stroke="#1f2a37" stroke-width="4" fill="none"/>
+            <circle cx="180" cy="215" r="5" fill="#1f2a37"/><circle cx="220" cy="215" r="5" fill="#1f2a37"/>
+            <circle cx="164" cy="240" r="8" fill="#e0715e" opacity=".4"/><circle cx="236" cy="240" r="8" fill="#e0715e" opacity=".4"/>
+            <path d="M186 246Q200 258 214 246" stroke="#1f2a37" stroke-width="4" fill="none" stroke-linecap="round"/>
+          </g>
+          <circle cx="340" cy="78" r="32" fill="#0f7a4a" stroke="#fff" stroke-width="6"/>
+          <path d="M325 78l10 10 20-21" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 46C240 86 480 86 720 54S1200 6 1440 40V80H0Z"/></svg>
+  </section>
+  <ul class="stats" aria-label="El sitio en cifras">
+    <li><strong>7</strong><span>temas explicados</span></li>
+    <li><strong>6</strong><span>ilustraciones</span></li>
+    <li><strong>9</strong><span>métodos de evaluación</span></li>
+    <li><strong>14</strong><span>referencias APA</span></li>
+  </ul>
 <div class="layout">
   <nav class="toc" id="toc" aria-label="Índice de contenidos">
     <h2>Contenido</h2>
@@ -211,57 +323,13 @@
       <li><a href="#metodos"><span class="n" aria-hidden="true">5</span>Métodos de evaluación</a></li>
       <li><a href="#dcu"><span class="n" aria-hidden="true">6</span>Diseño centrado en el usuario</a></li>
       <li><a href="#referencias"><span class="n" aria-hidden="true">7</span>Referencias</a></li>
-      <li><a href="#este-sitio"><span class="n" aria-hidden="true">✓</span>Usabilidad en este sitio</a></li>
     </ol>
   </nav>
 
-  <main id="contenido" tabindex="-1">
-
-    <!-- INICIO -->
-    <section id="inicio" class="hero" aria-labelledby="t-inicio">
-     <div class="hero-grid">
-      <div>
-      <svg class="logo-lg" width="64" height="64" viewBox="0 0 48 48" role="img" aria-label="Logo de Diseñar para Todos: figura humana con los brazos abiertos y una marca de verificación"><rect width="48" height="48" rx="13" fill="#fff" opacity=".18"/><circle cx="24" cy="24" r="16" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/><circle cx="24" cy="14.5" r="3.4" fill="#fff"/><path d="M13.5 20.5l10.5 2 10.5-2M24 22.5v7l-5.5 8.5M24 29.5l5.5 8.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="38" cy="38" r="7.5" fill="#f5a400" stroke="#fff" stroke-width="2"/><path d="M34.6 38l2.4 2.4 4.2-4.4" stroke="#172033" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <p class="kicker">Guía informativa · Universidad Manuela Beltrán</p>
-      <h1 id="t-inicio">Diseñar para Todos</h1>
-      <p>Una guía clara sobre cómo construir sitios web que cualquier persona pueda usar con facilidad, eficiencia y satisfacción.</p>
-      <p>Aquí encontrarás los fundamentos de la usabilidad y la accesibilidad, la ingeniería de usabilidad, su ciclo de vida, los métodos para evaluarla y el diseño web centrado en el usuario.</p>
-      <ul class="chips" aria-label="Accesos rápidos">
-        <li><a href="#nociones">Nociones básicas</a></li>
-        <li><a href="#accesibilidad">Accesibilidad</a></li>
-        <li><a href="#ciclo">Ciclo de vida</a></li>
-        <li><a href="#metodos">Evaluación</a></li>
-        <li><a href="#dcu">Diseño centrado en el usuario</a></li>
-      </ul>
-      </div>
-      <div class="hero-art">
-        <svg viewBox="0 0 340 260" role="img" aria-labelledby="hero-t">
-          <title id="hero-t">Ilustración de una página web ordenada y clara, con un símbolo de accesibilidad universal y un cursor, que representa una web usable para todas las personas</title>
-          <rect x="20" y="20" width="300" height="205" rx="14" fill="#fff"/>
-          <rect x="20" y="20" width="300" height="32" rx="14" fill="#e3eafe"/>
-          <rect x="20" y="38" width="300" height="14" fill="#e3eafe"/>
-          <circle cx="40" cy="36" r="5" fill="#ff6b6b"/><circle cx="56" cy="36" r="5" fill="#f5a400"/><circle cx="72" cy="36" r="5" fill="#2bb673"/>
-          <rect x="92" y="30" width="130" height="12" rx="6" fill="#fff"/>
-          <rect x="40" y="70" width="150" height="13" rx="6.5" fill="#1e4fd8"/>
-          <rect x="40" y="91" width="115" height="8" rx="4" fill="#c7d2fe"/>
-          <rect x="40" y="115" width="78" height="62" rx="9" fill="#eef1f8"/>
-          <rect x="50" y="127" width="30" height="6" rx="3" fill="#6a3fd1"/><rect x="50" y="140" width="56" height="5" rx="2.5" fill="#c7d2fe"/><rect x="50" y="150" width="46" height="5" rx="2.5" fill="#c7d2fe"/>
-          <rect x="128" y="115" width="78" height="62" rx="9" fill="#eef1f8"/>
-          <rect x="138" y="127" width="30" height="6" rx="3" fill="#1e4fd8"/><rect x="138" y="140" width="56" height="5" rx="2.5" fill="#c7d2fe"/><rect x="138" y="150" width="46" height="5" rx="2.5" fill="#c7d2fe"/>
-          <rect x="40" y="190" width="70" height="20" rx="10" fill="#1e4fd8"/>
-          <circle cx="262" cy="140" r="50" fill="#6a3fd1" stroke="#fff" stroke-width="5"/>
-          <circle cx="262" cy="116" r="7.5" fill="#fff"/>
-          <path d="M236 129l26 5 26-5M262 134v15l-12 20M262 149l12 20" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <path d="M96 196l0 30 8-8 6 13 6-3-6-12 11 0z" fill="#172033" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-          <circle cx="306" cy="34" r="20" fill="#f5a400" stroke="#fff" stroke-width="4"/>
-          <path d="M297 34l6 6 11-12" stroke="#172033" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-     </div>
-    </section>
+  <div class="content">
 
     <!-- 1 -->
-    <section id="nociones" class="topic" aria-labelledby="t1">
+    <section id="nociones" class="topic" data-num="01" aria-labelledby="t1">
       <span class="eyebrow">Tema 1</span>
       <h2 id="t1" class="sec">Usabilidad: nociones básicas para los profesionales de la información</h2>
       <p class="lead">La usabilidad es la medida en que un producto puede ser usado por determinados usuarios para lograr objetivos concretos con eficacia, eficiencia y satisfacción, en un contexto de uso específico.</p>
@@ -348,7 +416,7 @@
     </section>
 
     <!-- 2 -->
-    <section id="accesibilidad" class="topic" aria-labelledby="t2">
+    <section id="accesibilidad" class="topic" data-num="02" aria-labelledby="t2">
       <span class="eyebrow">Tema 2</span>
       <h2 id="t2" class="sec">Usabilidad y accesibilidad</h2>
       <p class="lead">La accesibilidad web busca que <strong>todas las personas</strong>, incluidas las que tienen alguna discapacidad, puedan percibir, entender, navegar e interactuar con la web.</p>
@@ -358,13 +426,13 @@
         <svg viewBox="0 0 600 260" role="img" aria-labelledby="f2t">
           <title id="f2t">Diagrama de dos círculos que se cruzan: usabilidad a la izquierda, accesibilidad a la derecha y, en el centro, una experiencia web para todos</title>
           <circle cx="225" cy="130" r="112" class="s-acc" fill-opacity=".18" stroke="var(--accent)" stroke-width="3"/>
-          <circle cx="375" cy="130" r="112" fill="#6a3fd1" fill-opacity=".18" stroke="#6a3fd1" stroke-width="3"/>
-          <text x="150" y="122" text-anchor="middle" class="s-txt" font-size="20" font-weight="800">Usabilidad</text>
-          <text x="150" y="146" text-anchor="middle" class="s-muted" font-size="13">Fácil, eficiente</text>
-          <text x="150" y="163" text-anchor="middle" class="s-muted" font-size="13">y satisfactoria</text>
-          <text x="452" y="122" text-anchor="middle" class="s-txt" font-size="20" font-weight="800">Accesibilidad</text>
-          <text x="452" y="146" text-anchor="middle" class="s-muted" font-size="13">Sin barreras</text>
-          <text x="452" y="163" text-anchor="middle" class="s-muted" font-size="13">para nadie</text>
+          <circle cx="375" cy="130" r="112" fill="#e09a10" fill-opacity=".2" stroke="#c98400" stroke-width="3"/>
+          <text x="172" y="122" text-anchor="middle" class="s-txt" font-size="18" font-weight="800">Usabilidad</text>
+          <text x="172" y="146" text-anchor="middle" class="s-muted" font-size="12.5">Fácil, eficiente</text>
+          <text x="172" y="163" text-anchor="middle" class="s-muted" font-size="12.5">y satisfactoria</text>
+          <text x="428" y="122" text-anchor="middle" class="s-txt" font-size="18" font-weight="800">Accesibilidad</text>
+          <text x="428" y="146" text-anchor="middle" class="s-muted" font-size="12.5">Sin barreras</text>
+          <text x="428" y="163" text-anchor="middle" class="s-muted" font-size="12.5">para nadie</text>
           <circle cx="300" cy="104" r="15" fill="#f5a400"/>
           <path d="M293 104l5 5 9-10" stroke="#172033" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           <text x="300" y="140" text-anchor="middle" class="s-txt" font-size="14" font-weight="800">Experiencia</text>
@@ -407,8 +475,13 @@
       <p>Personas con discapacidad visual, auditiva, motriz o cognitiva. También personas mayores, quienes usan el celular bajo el sol, quienes tienen una conexión lenta o un brazo lesionado temporalmente. <strong>La accesibilidad mejora la experiencia de todos.</strong></p>
     </section>
 
+    <aside class="band" aria-label="Dato destacado">
+      <p class="band-num">1.300 millones</p>
+      <p>de personas en el mundo, cerca del 16 % de la población, viven con una discapacidad significativa, según la Organización Mundial de la Salud (2023). Diseñar sin barreras es diseñar también para ellas.</p>
+    </aside>
+
     <!-- 3 -->
-    <section id="ingenieria" class="topic" aria-labelledby="t3">
+    <section id="ingenieria" class="topic" data-num="03" aria-labelledby="t3">
       <span class="eyebrow">Tema 3</span>
       <h2 id="t3" class="sec">Ingeniería de usabilidad</h2>
       <p class="lead">La ingeniería de usabilidad es el conjunto de procesos, técnicas y métodos que permiten incorporar la usabilidad de forma <strong>sistemática y medible</strong> durante todo el desarrollo de un producto.</p>
@@ -435,7 +508,7 @@
           <text x="445" y="28" text-anchor="middle" class="s-txt" font-size="15" font-weight="700">Tiempo por tarea (segundos)</text>
           <line x1="330" y1="195" x2="560" y2="195" class="s-stroke" stroke-width="2"/>
           <rect x="345" y="65" width="50" height="130" rx="6" class="s-muted" fill-opacity=".45"/>
-          <rect x="420" y="103" width="50" height="92" rx="6" fill="#6a3fd1" fill-opacity=".7"/>
+          <rect x="420" y="103" width="50" height="92" rx="6" fill="#0b7a66" fill-opacity=".7"/>
           <rect x="495" y="141" width="50" height="54" rx="6" class="s-acc"/>
           <text x="370" y="58" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">120</text>
           <text x="445" y="96" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">85</text>
@@ -468,7 +541,7 @@
     </section>
 
     <!-- 4 -->
-    <section id="ciclo" class="topic" aria-labelledby="t4">
+    <section id="ciclo" class="topic" data-num="04" aria-labelledby="t4">
       <span class="eyebrow">Tema 4</span>
       <h2 id="t4" class="sec">Ciclo de vida de la ingeniería de usabilidad</h2>
       <p class="lead">El modelo más reconocido es el de <strong>Deborah Mayhew (1999)</strong>. Organiza las tareas de usabilidad en tres grandes fases que se integran con el desarrollo del software.</p>
@@ -481,15 +554,15 @@
           </defs>
           <g>
             <rect x="15" y="30" width="175" height="110" rx="14" class="s-bg" stroke="var(--accent)" stroke-width="3"/>
-            <circle cx="45" cy="60" r="16" class="s-acc"/><text x="45" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">1</text>
+            <circle cx="45" cy="60" r="16" class="s-acc"/><text x="45" y="66" text-anchor="middle" class="s-on" font-size="16" font-weight="800">1</text>
             <text x="70" y="58" class="s-txt" font-size="15" font-weight="800">Análisis de</text>
             <text x="70" y="77" class="s-txt" font-size="15" font-weight="800">requisitos</text>
             <text x="30" y="108" class="s-muted" font-size="12.5">Usuarios, tareas</text>
             <text x="30" y="126" class="s-muted" font-size="12.5">y objetivos</text>
           </g>
           <g>
-            <rect x="232" y="30" width="175" height="110" rx="14" class="s-bg" stroke="#6a3fd1" stroke-width="3"/>
-            <circle cx="262" cy="60" r="16" fill="#6a3fd1"/><text x="262" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">2</text>
+            <rect x="232" y="30" width="175" height="110" rx="14" class="s-bg" stroke="#0b7a66" stroke-width="3"/>
+            <circle cx="262" cy="60" r="16" fill="#0b7a66"/><text x="262" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">2</text>
             <text x="287" y="58" class="s-txt" font-size="15" font-weight="800">Diseño, prueba</text>
             <text x="287" y="77" class="s-txt" font-size="15" font-weight="800">y desarrollo</text>
             <text x="247" y="108" class="s-muted" font-size="12.5">3 niveles</text>
@@ -497,7 +570,7 @@
           </g>
           <g>
             <rect x="449" y="30" width="175" height="110" rx="14" class="s-bg" stroke="var(--ok)" stroke-width="3"/>
-            <circle cx="479" cy="60" r="16" class="s-ok"/><text x="479" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="800">3</text>
+            <circle cx="479" cy="60" r="16" class="s-ok"/><text x="479" y="66" text-anchor="middle" class="s-on" font-size="16" font-weight="800">3</text>
             <text x="504" y="66" class="s-txt" font-size="15" font-weight="800">Instalación</text>
             <text x="464" y="108" class="s-muted" font-size="12.5">Uso real</text>
             <text x="464" y="126" class="s-muted" font-size="12.5">y mejoras</text>
@@ -554,7 +627,7 @@
     </section>
 
     <!-- 5 -->
-    <section id="metodos" class="topic" aria-labelledby="t5">
+    <section id="metodos" class="topic" data-num="05" aria-labelledby="t5">
       <span class="eyebrow">Tema 5</span>
       <h2 id="t5" class="sec">Métodos de evaluación de usabilidad</h2>
       <p class="lead">Los métodos se agrupan en dos familias. Los de <strong>inspección</strong> los aplican expertos sin usuarios. Los de <strong>prueba</strong> observan o consultan a usuarios reales.</p>
@@ -581,8 +654,8 @@
             <rect x="120" y="0" width="120" height="40" rx="12" class="s-bg s-stroke" stroke-width="2"/>
             <path d="M140 40l-6 12 18-12z" class="s-bg"/>
             <text x="180" y="25" text-anchor="middle" class="s-txt" font-size="13" font-weight="700">¿Dónde busco?</text>
-            <circle cx="60" cy="58" r="20" fill="#6a3fd1"/>
-            <path d="M24 150v-40a36 30 0 0 1 72 0v40z" fill="#6a3fd1" fill-opacity=".75"/>
+            <circle cx="60" cy="58" r="20" fill="#0b7a66"/>
+            <path d="M24 150v-40a36 30 0 0 1 72 0v40z" fill="#0b7a66" fill-opacity=".75"/>
             <rect x="92" y="88" width="118" height="62" rx="8" class="s-bg s-stroke" stroke-width="3"/>
             <rect x="104" y="100" width="60" height="7" rx="3.5" class="s-acc"/>
             <rect x="104" y="114" width="90" height="6" rx="3" class="s-muted" fill-opacity=".4"/>
@@ -623,7 +696,7 @@
     </section>
 
     <!-- 6 -->
-    <section id="dcu" class="topic" aria-labelledby="t6">
+    <section id="dcu" class="topic" data-num="06" aria-labelledby="t6">
       <span class="eyebrow">Tema 6</span>
       <h2 id="t6" class="sec">Diseño web centrado en el usuario</h2>
       <p class="lead">El Diseño Centrado en el Usuario (DCU) es un enfoque en el que las necesidades, capacidades y objetivos de los usuarios guían <strong>todas las decisiones</strong> del proceso de diseño.</p>
@@ -633,16 +706,16 @@
         <svg viewBox="0 0 600 290" role="img" aria-labelledby="f6t">
           <title id="f6t">Diagrama circular del diseño centrado en el usuario: el usuario en el centro, rodeado por cinco fases que se repiten en ciclo: planificar, contexto de uso, requisitos, diseñar y evaluar</title>
           <circle cx="300" cy="145" r="115" fill="none" class="s-stroke-acc" stroke-width="4" stroke-dasharray="10 8" opacity=".6"/>
-          <circle cx="300" cy="145" r="52" fill="#6a3fd1"/>
+          <circle cx="300" cy="145" r="52" fill="#0b7a66"/>
           <circle cx="300" cy="128" r="9" fill="#fff"/>
           <path d="M283 138l17 3 17-3M300 141v10l-8 13M300 151l8 13" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
           <text x="300" y="185" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">USUARIO</text>
           <g font-size="13.5" font-weight="700" text-anchor="middle">
-            <rect x="240" y="12" width="120" height="36" rx="18" class="s-acc"/><text x="300" y="35" fill="#fff">1. Planificar</text>
-            <rect x="350" y="92" width="120" height="36" rx="18" class="s-acc"/><text x="410" y="115" fill="#fff">2. Contexto</text>
-            <rect x="308" y="222" width="120" height="36" rx="18" class="s-acc"/><text x="368" y="245" fill="#fff">3. Requisitos</text>
-            <rect x="172" y="222" width="120" height="36" rx="18" class="s-acc"/><text x="232" y="245" fill="#fff">4. Diseñar</text>
-            <rect x="130" y="92" width="120" height="36" rx="18" class="s-acc"/><text x="190" y="115" fill="#fff">5. Evaluar</text>
+            <rect x="240" y="12" width="120" height="36" rx="18" class="s-acc"/><text x="300" y="35" class="s-on">1. Planificar</text>
+            <rect x="350" y="92" width="120" height="36" rx="18" class="s-acc"/><text x="410" y="115" class="s-on">2. Contexto</text>
+            <rect x="308" y="222" width="120" height="36" rx="18" class="s-acc"/><text x="368" y="245" class="s-on">3. Requisitos</text>
+            <rect x="172" y="222" width="120" height="36" rx="18" class="s-acc"/><text x="232" y="245" class="s-on">4. Diseñar</text>
+            <rect x="130" y="92" width="120" height="36" rx="18" class="s-acc"/><text x="190" y="115" class="s-on">5. Evaluar</text>
           </g>
           <text x="300" y="282" text-anchor="middle" class="s-muted" font-size="13">↻ Se repite hasta cumplir los requisitos</text>
         </svg>
@@ -680,7 +753,7 @@
     </section>
 
     <!-- 7 -->
-    <section id="referencias" class="topic" aria-labelledby="t7">
+    <section id="referencias" class="topic" data-num="07" aria-labelledby="t7">
       <span class="eyebrow">Tema 7</span>
       <h2 id="t7" class="sec">Referencias bibliográficas</h2>
       <p>Formato APA, 7.ª edición.</p>
@@ -696,40 +769,44 @@
         <li>Nielsen, J. (1993). <em>Usability engineering</em>. Academic Press.</li>
         <li>Nielsen, J. (1994, actualizado 2024). <em>10 usability heuristics for user interface design</em>. Nielsen Norman Group. <a href="https://www.nngroup.com/articles/ten-usability-heuristics/">https://www.nngroup.com/articles/ten-usability-heuristics/</a></li>
         <li>Norman, D. A. (2013). <em>The design of everyday things</em> (ed. revisada y ampliada). Basic Books.</li>
+        <li>Organización Mundial de la Salud. (2023). <em>Discapacidad</em> [Nota descriptiva]. <a href="https://www.who.int/es/news-room/fact-sheets/detail/disability-and-health">https://www.who.int/es/news-room/fact-sheets/detail/disability-and-health</a></li>
         <li>Rubin, J., y Chisnell, D. (2008). <em>Handbook of usability testing: How to plan, design, and conduct effective tests</em> (2.ª ed.). Wiley.</li>
         <li>World Wide Web Consortium. (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.2</em>. <a href="https://www.w3.org/TR/WCAG22/">https://www.w3.org/TR/WCAG22/</a></li>
       </ol>
     </section>
 
-    <!-- Extra -->
-    <section id="este-sitio" class="topic" aria-labelledby="t8">
-      <span class="eyebrow">Coherencia</span>
-      <h2 id="t8" class="sec">Cómo aplicamos la usabilidad en este sitio</h2>
-      <p>Este sitio fue diseñado siguiendo los mismos principios que describe:</p>
-      <ul class="applied wide">
-        <li><span aria-hidden="true">✓</span><span><strong>Navegación visible:</strong> índice fijo que resalta la sección en la que estás (heurística 1).</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Enlace "Saltar al contenido":</strong> aparece al presionar Tab, para usuarios de teclado y lector de pantalla.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Uso completo con teclado:</strong> con foco visible en amarillo en cada elemento.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Control del usuario:</strong> botones A− y A+ para el tamaño del texto y modo claro u oscuro.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Contraste AA:</strong> colores que cumplen la relación mínima de las WCAG.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>HTML semántico:</strong> encabezados jerárquicos, regiones y tablas con encabezados para tecnologías de apoyo.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Lectura cómoda:</strong> líneas de unos 70 caracteres, párrafos cortos y listas escaneables.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Responsive:</strong> se adapta a celulares, tablets y computadores.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Respeto a preferencias:</strong> reduce animaciones si el sistema lo pide y detecta el modo oscuro.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Consistencia:</strong> mismo patrón visual en todos los temas (heurística 4).</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Diseño minimalista:</strong> sin publicidad ni elementos que distraigan (heurística 8).</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Imágenes con texto alternativo:</strong> cada ilustración tiene una descripción que los lectores de pantalla pueden leer.</span></li>
-        <li><span aria-hidden="true">✓</span><span><strong>Apto para imprimir:</strong> al imprimir se ocultan los menús y queda solo el contenido.</span></li>
-      </ul>
-    </section>
-
-  </main>
+  </div>
 </div>
+</main>
 
-<footer>
-  <svg class="flogo" width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e4fd8"/><stop offset="1" stop-color="#6a3fd1"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#lg2)"/><circle cx="24" cy="14.5" r="3.4" fill="#fff"/><path d="M13.5 20.5l10.5 2 10.5-2M24 22.5v7l-5.5 8.5M24 29.5l5.5 8.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-  <p><strong>Diseñar para Todos</strong> · Guía de usabilidad y accesibilidad web</p>
-  <p>Universidad Manuela Beltrán (UMB) · Trabajo académico · 2026</p>
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <div class="fb"><svg width="42" height="42" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14935a"/><stop offset="1" stop-color="#0a5a4f"/></linearGradient><clipPath id="lg2c"><rect width="48" height="48" rx="13"/></clipPath></defs><rect width="48" height="48" rx="13" fill="url(#lg2)"/><g clip-path="url(#lg2c)"><circle cx="14" cy="18" r="5" fill="#ffd166"/><path d="M4 40Q4 26 14 26Q24 26 24 40Z" fill="#ffd166"/><circle cx="34" cy="18" r="5" fill="#bfe6cf"/><path d="M24 40Q24 26 34 26Q44 26 44 40Z" fill="#bfe6cf"/><circle cx="24" cy="22" r="6.2" fill="#fff"/><path d="M11 50Q11 31 24 31Q37 31 37 50Z" fill="#fff"/></g></svg><span>Diseñar para Todos</span></div>
+      <p>Guía informativa sobre usabilidad y accesibilidad web, elaborada como trabajo académico para la Universidad Manuela Beltrán.</p>
+    </div>
+    <nav aria-label="Temas del sitio">
+      <h2>Temas</h2>
+      <ul>
+        <li><a href="#nociones">Nociones básicas</a></li>
+        <li><a href="#accesibilidad">Usabilidad y accesibilidad</a></li>
+        <li><a href="#ingenieria">Ingeniería de usabilidad</a></li>
+        <li><a href="#ciclo">Ciclo de vida</a></li>
+        <li><a href="#metodos">Métodos de evaluación</a></li>
+        <li><a href="#dcu">Diseño centrado en el usuario</a></li>
+        <li><a href="#referencias">Referencias</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2>Recursos externos</h2>
+      <ul>
+        <li><a href="https://www.w3.org/TR/WCAG22/">Pautas WCAG 2.2 (W3C)</a></li>
+        <li><a href="https://www.w3.org/WAI/fundamentals/accessibility-intro/es">Introducción a la accesibilidad (W3C WAI)</a></li>
+        <li><a href="https://www.nngroup.com/articles/ten-usability-heuristics/">Heurísticas de Nielsen</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">© 2026 Diseñar para Todos · Universidad Manuela Beltrán (UMB) · Trabajo académico</div>
 </footer>
 
 <button class="to-top" id="toTop" type="button" aria-label="Volver arriba">↑</button>
@@ -795,6 +872,16 @@
       });
     }, {rootMargin:'-40% 0px -55% 0px'});
     Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+  }
+
+  // Aparición suave al bajar
+  var motionOK = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (motionOK && 'IntersectionObserver' in window){
+    root.classList.add('js-anim');
+    var ro = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } });
+    }, {rootMargin:'0px 0px -6% 0px'});
+    document.querySelectorAll('.topic, .fig, .card, .band, .stats').forEach(function(el){ el.classList.add('reveal'); ro.observe(el); });
   }
 
   // Volver arriba
